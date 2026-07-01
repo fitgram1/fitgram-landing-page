@@ -19,10 +19,10 @@ tokens and brand orange (`--primary: 25 95% 53%`) as the FitGram app.
 ## Quick start
 
 ```bash
-npm install
-npm run dev        # http://localhost:5173
-npm run build      # type-check + production build → dist/
-npm run preview    # preview the production build
+yarn install
+yarn dev        # http://localhost:5173
+yarn build      # type-check + production build → dist/
+yarn preview    # preview the production build
 ```
 
 To go live: `dist/` is a static bundle — deploy to **Netlify** (config included), **Vercel**, **Cloudflare Pages**, or GitHub Pages.
