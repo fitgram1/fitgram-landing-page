@@ -1,4 +1,6 @@
 import type { Config } from 'tailwindcss';
+// @ts-expect-error — nativewind ships an untyped preset
+import nativewind from 'nativewind/preset';
 
 /**
  * Mirrors FitGram's app design tokens (apps/app/tailwind.config.js + global.css)
@@ -7,6 +9,11 @@ import type { Config } from 'tailwindcss';
 const config: Config = {
   darkMode: 'class',
   content: ['./index.html', './src/**/*.{ts,tsx}'],
+  presets: [nativewind],
+  // react-native-web injects base styles (e.g. View → display:flex) at runtime,
+  // which would otherwise beat single-class Tailwind utilities on a specificity
+  // tie. Scoping utilities under #root raises their specificity so they win.
+  important: '#root',
   theme: {
     container: {
       center: true,
@@ -62,9 +69,29 @@ const config: Config = {
           from: { opacity: '0', transform: 'translateY(12px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
         },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-14px)' },
+        },
+        dash: {
+          to: { strokeDashoffset: '0' },
+        },
+        'glow-pulse': {
+          '0%, 100%': { opacity: '0.55', transform: 'scale(1)' },
+          '50%': { opacity: '0.8', transform: 'scale(1.05)' },
+        },
+        marquee: {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-50%)' },
+        },
       },
       animation: {
         'fade-up': 'fade-up 0.5s ease-out both',
+        float: 'float 6s ease-in-out infinite',
+        'float-slow': 'float 8s ease-in-out infinite',
+        dash: 'dash 3s linear infinite',
+        'glow-pulse': 'glow-pulse 6s ease-in-out infinite',
+        marquee: 'marquee 32s linear infinite',
       },
     },
   },

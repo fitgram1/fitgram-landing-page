@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FitGram — All your clients, workouts & diets in one app</title>
+    <title>FitGram — All-in-one for trainers</title>
     <meta
       name="description"
       content="FitGram is the all-in-one platform built for personal trainers. Organize clients, deliver workout & diet plans, and communicate — all in one place. Join the beta waiting list."
@@ -30,6 +30,19 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Apply theme before paint to avoid a flash of the wrong color scheme.
+      (function () {
+        try {
+          var saved = localStorage.getItem('fitgram.theme');
+          var dark = saved
+            ? saved === 'dark'
+            : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (dark) document.documentElement.classList.add('dark');
+          document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+        } catch (e) {}
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

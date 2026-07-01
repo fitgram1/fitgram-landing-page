@@ -1,10 +1,18 @@
-# FitGram — Landing Page (Phase 2)
+# FitGram — Landing Page
 
-Standalone, conversion-focused landing page to capture emails from personal trainers (PTs) interested in the FitGram MVP.
+Marketing & waitlist landing page for **FitGram**, the all-in-one platform for
+personal trainers — it replaces scattered spreadsheets, PDFs and WhatsApp threads
+with one system for clients, workout/nutrition plans, check-ins and progress.
 
-**Stack:** React + TypeScript + Vite + Tailwind CSS.
-**Design system:** shadcn-style reusable components (the web twin of FitGram's **RNR — React Native Reusables**), using the *exact same* design tokens and brand orange (`--primary: 25 95% 53%`) as the app.
-**i18n:** English 🇬🇧 / Português 🇵🇹 / Español 🇪🇸 with an in-nav language switcher (auto-detects browser language, persists to `localStorage`).
+**Stack:** React 18 + TypeScript + Vite + Tailwind CSS (via **NativeWind** /
+`react-native-web`) + lucide-react.
+**Features:** i18n (English 🇬🇧 / Português 🇵🇹 / Español 🇪🇸), light/dark theme,
+scroll-reveal animations, nav scroll-spy, and a beta application form that stores
+leads in a Google Sheet with email deduplication and automatic confirmation emails.
+**Design system:** shadcn/RNR-style reusable components using the *same* design
+tokens and brand orange (`--primary: 25 95% 53%`) as the FitGram app.
+
+> See **`ARCHITECTURE.md`** for a full breakdown of the codebase.
 
 ---
 
@@ -43,8 +51,9 @@ src/
 │   ├── Logo.tsx
 │   ├── LanguageSwitcher.tsx
 │   └── sections/              # page sections, all driven by the i18n dictionary
-│       ├── Navbar.tsx  Hero.tsx  TrustStrip.tsx  Problem.tsx
-│       ├── Solution.tsx  Testimonials.tsx (carousel)  WaitlistForm.tsx  Footer.tsx
+│       ├── Navbar.tsx  Hero.tsx  TrustStrip.tsx  Problem.tsx  Solution.tsx
+│       ├── Offer.tsx (Founding PT)  Testimonials.tsx (carousel)
+│       ├── Faq.tsx  WaitlistForm.tsx  Footer.tsx
 ```
 
 ### Reusable components (RNR-style)
@@ -54,34 +63,55 @@ The `src/components/ui/*` files mirror FitGram's `apps/app/components/ui/*`: `cv
 
 ## Page structure (matches the Phase 2 spec)
 
-1. **Hero** — headline (Variant A), subheading, animated phone mockup, primary CTA
+1. **Hero** — headline, subheading, animated phone mockup, primary CTA
 2. **Trust strip** — what FitGram replaces
-3. **Problem** — "Sound familiar?" + 3 pain points + the 15–20 client ceiling line
+3. **Problem** — "Sound familiar?" + pain points + the 15–20 client ceiling line
 4. **Solution** — 3 features, each mapped to a pain point (Client Management, Workout & Diet Delivery, Coaching Inbox)
-5. **Testimonials** — **carousel** of trainer quotes + animated waiting-list counter + "Built by trainers, for trainers"
-6. **CTA / Lead capture form** — Email (required), PT type (required), Name (optional) + trust line + confirmation
+5. **Offer** — **Founding PT**: early access, direct line to the team, 6 months free after launch, lifetime discount
+6. **Testimonials** — **carousel** of trainer quotes + animated waiting-list counter + "Built by trainers, for trainers"
+7. **FAQ** — accordion: availability, price, "do I change how I work?", "what do you expect from me?"
+8. **CTA / Lead capture form** — Name, Email, PT type, # clients, current tools (all required) + Instagram/contact, call availability, biggest time-sink (optional) + trust line + confirmation
+9. **Footer**
 
 All copy is final and fully translated — no placeholders, one consistent language at a time.
 
 ---
 
-## Connecting the form (pick ONE)
+## Lead capture — Google Sheets (with dedup + confirmation email)
 
-The form works in **demo mode** out of the box (logs the payload + shows the confirmation). To collect real leads, edit `FORM_ENDPOINT` at the top of `src/components/sections/WaitlistForm.tsx`:
+Leads are captured **without a backend of our own**. The form
+(`src/components/sections/WaitlistForm.tsx`) POSTs to a **Google Apps Script Web
+App** that stores each submission in a Google Sheet, **dedupes by email**, and
+emails both the team and the applicant. The Apps Script code is in
+[`docs/google-apps-script.gs`](docs/google-apps-script.gs).
 
-### Option A — Formspree / webhook
-```ts
-const FORM_ENDPOINT = 'https://formspree.io/f/XXXXXXX';
-```
-Submissions POST as JSON: `{ email, ptType, name, locale, submittedAt, source }`. Enable email notifications in Formspree and pipe to Google Sheets via Zapier/Make.
+**Setup**
 
-### Option B — Tally (recommended in spec)
-Build the form in [Tally](https://tally.so), brand it (orange/dark + logo), connect **Google Sheets** + email notification, then either point `FORM_ENDPOINT` at the Tally webhook or replace the form card with the Tally embed.
+1. Create a Google Sheet (this is the leads database).
+2. **Extensions → Apps Script**, paste `docs/google-apps-script.gs`, Save.
+3. **Deploy → New deployment → Web app** — *Execute as:* **Me**, *Who has
+   access:* **Anyone** → Deploy and authorize. Copy the URL that ends in `/exec`.
+4. Paste that URL into **`SHEET_ENDPOINT`** at the top of `WaitlistForm.tsx`.
+   (Set `NOTIFY_EMAIL` in the script to change/disable the team notification.)
 
-### Option C — Google Forms
-Use the form's `.../formResponse` POST URL and map `entry.XXXX` field IDs into the payload. Auto-exports to Google Sheets natively.
+That's it. On submit:
 
-> **Google Sheets = single source of truth.** Columns: `Email | PT Type | Name | Locale | Timestamp`. Segment by PT type for targeted messaging; track signup date for growth.
+| Event | Result |
+| ----- | ------ |
+| New lead | row appended to the sheet + email to the team + confirmation email to the applicant |
+| Repeat email | rejected → the UI shows a "you're already on the list" state |
+
+Stored values are language-independent codes — `ptType`: `in-person`/`online`/`hybrid`;
+`clients`: `0-5`/`6-15`/`16-30`/`30+`; `tools`: comma-joined (`whatsapp, excel, …`).
+
+> **Notes.** The request is sent as `text/plain` so the browser skips the CORS
+> preflight Apps Script can't answer. `Who has access` **must** be `Anyone`
+> (not "Anyone with Google account", which returns 401). After editing the
+> script, redeploy with **Deploy → Manage deployments → edit → Version: New**.
+>
+> **Fallback.** While `SHEET_ENDPOINT` is empty, the form falls back to
+> **FormSubmit** (`LEAD_ENDPOINT`), which just emails the lead — no storage, no
+> dedup.
 
 ---
 
@@ -104,16 +134,18 @@ Use the form's `.../formResponse` POST URL and map `entry.XXXX` field IDs into t
 
 ## Phase 2 deliverables
 
-- [x] 2 headline variants drafted + 1 selected
-- [x] Landing page with all sections (Hero, Problem, Solution, CTA)
+- [x] Landing page with all spec sections (Hero, Problem, Solution, Offer, Testimonials, FAQ, Form)
+- [x] **Offer** section — Founding PT (early access, direct contact, 6 months free, lifetime discount)
+- [x] **FAQ** section — accordion with the 4 spec questions
 - [x] Carousel section (testimonials) — partner request
-- [x] Lead capture form (Email + PT type + optional Name) with validation + confirmation
+- [x] Lead capture form — full spec fields (Name, Email, PT type, # clients, tools required; contact, call, time-sink optional) with validation
+- [x] Confirmation message aligned with spec (+ "reply with one line" prompt)
 - [x] Branded with FitGram logo + colors (shared tokens)
 - [x] Built with reusable RNR/shadcn-style components + Tailwind
 - [x] EN / PT / ES translations with language switcher
 - [x] Complete copy for all sections (page + form + social)
 - [x] OG meta for shareable link previews
-- [ ] Form connected to Google Sheets — *set `FORM_ENDPOINT` or embed Tally (above)*
-- [ ] Email notification on new signup — *enable in your form tool*
+- [x] Form wired to **Google Sheets via Apps Script** — storage, email dedup, and confirmation emails (see "Lead capture")
+- [x] Email notification to the team + automatic confirmation email to the applicant
 - [ ] Deployed + shareable link tested on mobile/WhatsApp/Instagram
 - [ ] Link added to Instagram bio

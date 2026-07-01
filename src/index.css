@@ -60,4 +60,84 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }
+
+  /*
+   * react-native-web's <Text> base resets color to black and font to
+   * "14px System" instead of inheriting. Make RN Text inherit by default
+   * (web-like) so untagged Text matches its container; explicit Tailwind
+   * text utilities (raised to #root specificity) still override per element.
+   * Prefix-based selector is stable across RNW hash changes.
+   */
+  #root [class*='css-text-'] {
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+  }
+}
+
+@layer components {
+  /* Subtle premium gradient mesh behind the hero. */
+  .bg-hero-mesh {
+    background:
+      radial-gradient(circle at 18% 18%, hsl(28 100% 95% / 0.9) 0%, transparent 42%),
+      radial-gradient(circle at 82% 68%, hsl(22 100% 93% / 0.85) 0%, transparent 38%);
+  }
+  .dark .bg-hero-mesh {
+    background:
+      radial-gradient(circle at 18% 18%, hsl(25 95% 50% / 0.1) 0%, transparent 42%),
+      radial-gradient(circle at 82% 68%, hsl(25 95% 50% / 0.08) 0%, transparent 38%);
+  }
+
+  /* Glassmorphism floating card. */
+  .glass-card {
+    background: hsl(0 0% 100% / 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid hsl(0 0% 100% / 0.8);
+    box-shadow: 0 20px 50px -20px hsl(25 60% 30% / 0.25);
+  }
+  .dark .glass-card {
+    background: hsl(0 0% 8% / 0.6);
+    border: 1px solid hsl(0 0% 100% / 0.1);
+    box-shadow: 0 20px 50px -20px hsl(0 0% 0% / 0.6);
+  }
+
+  /* Periodic shine sweep across the primary CTA. */
+  .cta-shine {
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-shine::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      120deg,
+      transparent 30%,
+      hsl(0 0% 100% / 0.35) 50%,
+      transparent 70%
+    );
+    transform: translateX(-100%);
+    animation: cta-sweep 5s ease-in-out infinite;
+  }
+  @keyframes cta-sweep {
+    0%, 25% {
+      transform: translateX(-100%);
+    }
+    45%, 100% {
+      transform: translateX(100%);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-float-slow,
+  .animate-dash,
+  .animate-glow-pulse,
+  .cta-shine::after {
+    animation: none !important;
+  }
 }
