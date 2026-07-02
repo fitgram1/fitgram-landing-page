@@ -2,10 +2,10 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'node:path';
 
-export default defineConfig(({ command }) => ({
-  // Served from https://fitgram1.github.io/fitgram-landing-page/ on GitHub Pages,
-  // so production assets need that sub-path. Dev stays at the root.
-  base: command === 'build' ? '/fitgram-landing-page/' : '/',
+export default defineConfig(() => ({
+  // Self-hosted on the k3s cluster behind the shared Cloudflare Tunnel, served at
+  // the root of its own host (e.g. https://fitgram.mattresscollective.pt/).
+  base: '/',
   plugins: [
     // NativeWind's JSX runtime bridges Tailwind `className` onto RN primitives.
     react({ jsxImportSource: 'nativewind' }),
@@ -25,7 +25,7 @@ export default defineConfig(({ command }) => ({
   optimizeDeps: {
     include: ['react-native-web'],
     esbuildOptions: {
-      loader: { '.js': 'jsx' },
+      loader: { '.js': 'jsx' } as const,
     },
   },
 }));

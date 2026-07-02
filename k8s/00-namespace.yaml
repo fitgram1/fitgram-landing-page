@@ -1,0 +1,5 @@
+# Namespace isolado para a landing page.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fitgram-landing

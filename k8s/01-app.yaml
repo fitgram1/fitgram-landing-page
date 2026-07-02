@@ -1,0 +1,62 @@
+# A landing page do FitGram — site estático servido por nginx.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fitgram-landing
+  namespace: fitgram-landing
+  labels:
+    app: fitgram-landing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fitgram-landing
+  template:
+    metadata:
+      labels:
+        app: fitgram-landing
+    spec:
+      containers:
+        - name: fitgram-landing
+          # Constrói e publica com:  docker build/push (ver k8s/README.md).
+          # Fixa por digest (@sha256:...) depois do primeiro push, como no casa-stock.
+          image: ghcr.io/taniabmguedes/fitgram-landing:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "25m"
+              memory: "32Mi"
+            limits:
+              memory: "128Mi"
+      # Repo privado no GHCR? Descomenta e cria o secret (ver README, passo 1b).
+      # imagePullSecrets:
+      #   - name: ghcr-pull
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fitgram-landing
+  namespace: fitgram-landing
+spec:
+  selector:
+    app: fitgram-landing
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  type: ClusterIP
