@@ -6,7 +6,12 @@ import { useI18n } from '@/i18n';
 import { ClientPanel } from '../subsections/ClientPanel';
 import { PlanPanel } from '../subsections/PlanPanel';
 
-const VISUALS = [<ClientPanel />, <PlanPanel />];
+const VISUALS = [
+  <ClientPanel />,
+  <PlanPanel plan="workout" />,
+  <PlanPanel plan="diet" />,
+  <PlanPanel plan="forms" />,
+];
 
 export function Showcase() {
   const { t } = useI18n();
@@ -39,7 +44,7 @@ export function Showcase() {
 
           {t.showcase.items.map((item, i) => (
             <Reveal key={item.title}>
-              <View className="relative grid items-center gap-8 py-10 md:grid-cols-2 md:gap-16 md:py-14">
+              <View className="relative grid items-center gap-8 py-4 md:grid-cols-2 md:gap-16 md:py-6">
                 {/* node on the spine */}
                 <div
                   className="absolute left-1/2 top-1/2 z-10 hidden size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-background bg-primary shadow-[0_0_0_4px_hsl(var(--primary)/0.15)] md:block"

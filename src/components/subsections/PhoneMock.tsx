@@ -1,4 +1,4 @@
-import phoneDemo from "@/assets/phone-demo.mp4";
+import phoneDemo from "@/assets/hero-demo.mp4";
 
 export function PhoneMock() {
   return (

@@ -225,8 +225,16 @@ export const messages: Record<Locale, Messages> = {
           body: 'Context, goals, and history at a glance — so you always know who needs you today.',
         },
         {
-          title: 'Workouts and diets, structured',
-          body: 'Build and assign plans your clients actually follow — no more messy PDFs or broken links.',
+          title: 'Workouts, set by set',
+          body: 'Build and assign training plans your clients actually follow — sets, reps and progressions, right in the app.',
+        },
+        {
+          title: 'Diets, to the gram',
+          body: 'Meal plans with macros and portions your clients stick to — no more messy PDFs or broken links.',
+        },
+        {
+          title: 'Forms and photos, no filter',
+          body: 'Clients submit check-in forms, progress photos and body metrics — it all lands on their profile, ready when you are.',
         },
       ],
     },
@@ -462,8 +470,16 @@ export const messages: Record<Locale, Messages> = {
           body: 'Contexto, objetivos e histórico num relance — para saberes sempre quem precisa de ti hoje.',
         },
         {
-          title: 'Treinos e dietas, estruturados',
-          body: 'Cria e atribui planos que os clientes seguem mesmo — sem PDFs confusos nem links partidos.',
+          title: 'Treinos em série',
+          body: 'Cria e atribui planos de treino que os clientes seguem mesmo — séries, reps e progressões, direto na app.',
+        },
+        {
+          title: 'Dietas à grama',
+          body: 'Planos alimentares com macros e porções que os clientes cumprem — sem PDFs confusos nem links partidos.',
+        },
+        {
+          title: 'Formulários e fotos, sem filtros',
+          body: 'Os clientes enviam formulários de check-in, fotos de progresso e métricas corporais — cai tudo no perfil, pronto quando precisares.',
         },
       ],
     },
@@ -699,8 +715,16 @@ export const messages: Record<Locale, Messages> = {
           body: 'Contexto, objetivos e historial de un vistazo — para saber siempre quién te necesita hoy.',
         },
         {
-          title: 'Entrenamientos y dietas, estructurados',
-          body: 'Crea y asigna planes que tus clientes siguen de verdad — sin PDFs caóticos ni enlaces rotos.',
+          title: 'Entrenamientos, serie a serie',
+          body: 'Crea y asigna planes de entrenamiento que tus clientes siguen de verdad — series, reps y progresiones, en la app.',
+        },
+        {
+          title: 'Dietas, al gramo',
+          body: 'Planes de comidas con macros y porciones que tus clientes cumplen — sin PDFs caóticos ni enlaces rotos.',
+        },
+        {
+          title: 'Formularios y fotos, sin filtro',
+          body: 'Los clientes envían formularios de check-in, fotos de progreso y métricas corporales — todo llega a su perfil, listo cuando lo necesites.',
         },
       ],
     },

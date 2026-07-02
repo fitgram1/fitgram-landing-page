@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import {
   MessageCircle,
@@ -10,6 +11,8 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Reveal } from '@/components/Reveal';
 import { useI18n } from '@/i18n';
+import { cn } from '@/lib/utils';
+import { SolutionDemo } from '../subsections/SolutionDemo';
 
 // Icons + orbital positions (% of the square container) for each solution node,
 // in the same order as t.solution.nodes.
@@ -25,6 +28,16 @@ const NODE_POS = [
 export function Solution() {
   const { t } = useI18n();
 
+  // Cycle the highlight through the nodes, one at a time.
+  const [activeIndex, setActiveIndex] = useState(0);
+  useEffect(() => {
+    const id = setInterval(
+      () => setActiveIndex((prev) => (prev + 1) % NODE_ICONS.length),
+      1600
+    );
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <section id="solution" className="relative overflow-hidden py-20 md:py-24">
       <div
@@ -33,8 +46,8 @@ export function Solution() {
       />
 
       <View className="container">
-        <View className="grid items-center gap-12 lg:grid-cols-2">
-          {/* Copy */}
+        <View className="grid items-start gap-12 lg:grid-cols-2">
+          {/* Copy + demo */}
           <View>
             <Reveal>
               <Badge className="mb-5 self-start rounded-md px-4 py-1.5 text-sm">
@@ -51,6 +64,11 @@ export function Solution() {
               <p className="mt-6 max-w-md text-[clamp(15px,1.6vw,18px)] leading-relaxed text-muted-foreground">
                 {t.solution.lead}
               </p>
+            </Reveal>
+
+            {/* Product demo (app window), right below the copy */}
+            <Reveal delay={280} className="mt-8">
+              <SolutionDemo />
             </Reveal>
           </View>
 
@@ -74,10 +92,13 @@ export function Solution() {
                   x2={p.x}
                   y2={p.y}
                   stroke="currentColor"
-                  strokeWidth="0.3"
+                  strokeWidth={i === activeIndex ? 0.7 : 0.3}
                   strokeLinecap="round"
                   strokeDasharray="1 2.5"
-                  className="animate-dash"
+                  className={cn(
+                    'animate-dash transition-all duration-500',
+                    i === activeIndex && 'text-primary',
+                  )}
                 />
               ))}
             </svg>
@@ -93,16 +114,27 @@ export function Solution() {
             {t.solution.nodes.map((node, i) => {
               const Icon = NODE_ICONS[i];
               const p = NODE_POS[i];
+              const active = i === activeIndex;
               return (
                 <div
                   key={node.title}
                   className="group absolute w-44 -translate-x-1/2 text-center"
                   style={{ left: `${p.x}%`, top: `calc(${p.y}% - 28px)` }}
                 >
-                  <View className="mx-auto mb-2.5 grid size-14 place-items-center rounded-2xl border border-primary/15 bg-card text-primary shadow-md transition-all duration-300 group-hover:-translate-y-1 group-hover:scale-105 group-hover:border-primary/50 group-hover:shadow-lg group-hover:shadow-primary/25">
+                  <View
+                    className={cn(
+                      'mx-auto mb-2.5 grid size-14 place-items-center rounded-2xl border border-primary/15 bg-card text-primary shadow-md transition-all duration-300 group-hover:-translate-y-1 group-hover:scale-105 group-hover:border-primary/50 group-hover:shadow-lg group-hover:shadow-primary/25',
+                      active && '-translate-y-1 scale-105 border-primary/50 shadow-lg shadow-primary/25',
+                    )}
+                  >
                     <Icon className="size-6" />
                   </View>
-                  <h3 className="text-lg font-bold tracking-tight transition-colors group-hover:text-primary">
+                  <h3
+                    className={cn(
+                      'text-lg font-bold tracking-tight transition-colors group-hover:text-primary',
+                      active && 'text-primary',
+                    )}
+                  >
                     {node.title}
                   </h3>
                   <p className="mt-1 text-sm leading-snug text-muted-foreground">{node.body}</p>
