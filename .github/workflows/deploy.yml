@@ -22,12 +22,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Enable Corepack so the pinned Yarn 4 (packageManager field) is used,
+      # before setup-node runs `yarn` for its cache step.
+      - run: corepack enable
+
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: yarn
 
-      - run: yarn install --frozen-lockfile
+      - run: yarn install --immutable
       - run: yarn build
 
       - uses: actions/upload-pages-artifact@v3
