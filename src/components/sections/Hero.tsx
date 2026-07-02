@@ -141,8 +141,8 @@ export function Hero() {
           </div> */}
         </div>
 
-        <div className="relative mx-auto flex w-full max-w-md items-center justify-center [order:-1] [perspective:1600px] md:order-last">
-    
+        <div className="relative mx-auto flex w-full max-w-[300px] scale-90 items-center justify-center [perspective:1600px] sm:max-w-md sm:scale-100 md:order-last">
+
           <div
             className="animate-glow-pulse pointer-events-none absolute h-[340px] w-[340px] rounded-full bg-primary/25 blur-[120px]"
             aria-hidden
