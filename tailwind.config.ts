@@ -50,6 +50,8 @@ const config: Config = {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
         },
+        elevated: 'hsl(var(--elevated))',
+        success: 'hsl(var(--success))',
         popover: {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))',
@@ -63,6 +65,14 @@ const config: Config = {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+      },
+      boxShadow: {
+        card: 'var(--shadow-card)',
+        pop: 'var(--shadow-pop)',
+      },
+      transitionTimingFunction: {
+        out: 'var(--ease-out)',
+        'in-out-fg': 'var(--ease-in-out)',
       },
       keyframes: {
         'fade-up': {

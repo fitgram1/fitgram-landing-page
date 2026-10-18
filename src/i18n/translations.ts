@@ -9,7 +9,7 @@ export const LOCALES: { code: Locale; label: string }[] = [
 export interface Messages {
   nav: {
     cta: string;
-    links: { problem: string; solution: string; offer: string; faq: string };
+    links: { problem: string; solution: string; offer: string; pricing: string; faq: string };
   };
   hero: {
     eyebrow: string;
@@ -76,6 +76,21 @@ export interface Messages {
     perks: { title: string; body: string }[];
     cta: string;
   };
+  pricing: {
+    eyebrow: string;
+    headPre: string;
+    headHl: string;
+    sub: string;
+    monthly: string;
+    yearly: string;
+    perMonth: string;
+    perYear: string;
+    save: string;
+    unlimited: string;
+    upTo: string;
+    free: { name: string; tagline: string; features: string[]; cta: string };
+    pro: { tagline: string; features: string[]; cta: string };
+  };
   faq: {
     eyebrow: string;
     heading: string;
@@ -135,6 +150,7 @@ export const messages: Record<Locale, Messages> = {
         problem: 'Problem',
         solution: 'Solution',
         offer: 'Offer',
+        pricing: 'Pricing',
         faq: 'FAQ',
       },
     },
@@ -143,7 +159,7 @@ export const messages: Record<Locale, Messages> = {
       headPre: 'Your PT studio in your ',
       headHl: 'pocket',
       headPost: '.',
-      sub: 'Bring clients, plans, check-ins, and progress into one platform — so you stop juggling your coaching across WhatsApp, Excel, and PDFs.',
+      sub: 'FitGram tells you who to talk to today, drafts the message, and you build the workout by tapping the body.',
       ctaPrimary: 'I want to try FitGram',
       ctaSecondary: 'See how it works ↓',
       microcopy: 'Free beta for a small group of personal trainers.',
@@ -279,6 +295,30 @@ export const messages: Record<Locale, Messages> = {
       ],
       cta: 'Reserve your beta spot',
     },
+    pricing: {
+      eyebrow: 'Pricing',
+      headPre: 'Two plans. ',
+      headHl: 'No surprises.',
+      sub: 'Start free with your first clients and upgrade to Pro when you grow.',
+      monthly: 'Monthly',
+      yearly: 'Yearly',
+      perMonth: '/ month',
+      perYear: '/ year',
+      save: 'You save {amount} a year',
+      unlimited: 'Unlimited clients',
+      upTo: 'Up to {count} clients',
+      free: {
+        name: 'Free',
+        tagline: 'To start with your first clients',
+        features: ['Client management', 'Existing clients are never removed'],
+        cta: 'Start free',
+      },
+      pro: {
+        tagline: 'For trainers who are growing',
+        features: ['Everything included', 'Training and diet templates', 'No client limit'],
+        cta: 'Go Pro',
+      },
+    },
     faq: {
       eyebrow: 'FAQ',
       heading: 'Quick questions, quick answers',
@@ -380,6 +420,7 @@ export const messages: Record<Locale, Messages> = {
         problem: 'Problema',
         solution: 'Solução',
         offer: 'Oferta',
+        pricing: 'Preços',
         faq: 'FAQ',
       },
     },
@@ -388,7 +429,7 @@ export const messages: Record<Locale, Messages> = {
       headPre: 'O teu estúdio de PT no ',
       headHl: 'bolso',
       headPost: '.',
-      sub: 'Junta clientes, planos, check-ins e progresso numa única plataforma, para deixares de gerir o teu acompanhamento entre WhatsApp, Excel e PDFs.',
+      sub: 'O FitGram diz-te com quem falar hoje, prepara a mensagem, e tu constróis o treino tocando no corpo.',
       ctaPrimary: 'Quero testar o FitGram',
       ctaSecondary: 'Vê como funciona ↓',
       microcopy: 'Beta gratuita para um grupo pequeno de Personal Trainers.',
@@ -524,6 +565,30 @@ export const messages: Record<Locale, Messages> = {
       ],
       cta: 'Reservar acesso à beta',
     },
+    pricing: {
+      eyebrow: 'Preços',
+      headPre: 'Dois planos. ',
+      headHl: 'Sem surpresas.',
+      sub: 'Começa grátis com os teus primeiros clientes e passa a Pro quando crescer.',
+      monthly: 'Mensal',
+      yearly: 'Anual',
+      perMonth: '/ mês',
+      perYear: '/ ano',
+      save: 'Poupas {amount} por ano',
+      unlimited: 'Clientes ilimitados',
+      upTo: 'Até {count} clientes',
+      free: {
+        name: 'Grátis',
+        tagline: 'Para começar com os primeiros clientes',
+        features: ['Gestão de clientes', 'Os clientes que já tens nunca são removidos'],
+        cta: 'Começar grátis',
+      },
+      pro: {
+        tagline: 'Para quem está a crescer',
+        features: ['Tudo incluído', 'Modelos de treino e de dieta', 'Sem limite de clientes'],
+        cta: 'Passar a Pro',
+      },
+    },
     faq: {
       eyebrow: 'FAQ',
       heading: 'Perguntas rápidas, respostas rápidas',
@@ -625,6 +690,7 @@ export const messages: Record<Locale, Messages> = {
         problem: 'Problema',
         solution: 'Solución',
         offer: 'Oferta',
+        pricing: 'Precios',
         faq: 'FAQ',
       },
     },
@@ -633,7 +699,7 @@ export const messages: Record<Locale, Messages> = {
       headPre: 'Tu estudio de PT en el ',
       headHl: 'bolsillo',
       headPost: '.',
-      sub: 'Reúne clientes, planes, check-ins y progreso en una única plataforma, para dejar de gestionar tu acompañamiento entre WhatsApp, Excel y PDFs.',
+      sub: 'FitGram te dice con quién hablar hoy, prepara el mensaje y tú construyes el entrenamiento tocando el cuerpo.',
       ctaPrimary: 'Quiero probar FitGram',
       ctaSecondary: 'Mira cómo funciona ↓',
       microcopy: 'Beta gratuita para un grupo pequeño de entrenadores personales.',
@@ -768,6 +834,30 @@ export const messages: Record<Locale, Messages> = {
         { title: 'Descuento de por vida', body: 'Un descuento de fundador que se queda contigo para siempre.' },
       ],
       cta: 'Reservar acceso a la beta',
+    },
+    pricing: {
+      eyebrow: 'Precios',
+      headPre: 'Dos planes. ',
+      headHl: 'Sin sorpresas.',
+      sub: 'Empieza gratis con tus primeros clientes y pasa a Pro cuando crezcas.',
+      monthly: 'Mensual',
+      yearly: 'Anual',
+      perMonth: '/ mes',
+      perYear: '/ año',
+      save: 'Ahorras {amount} al año',
+      unlimited: 'Clientes ilimitados',
+      upTo: 'Hasta {count} clientes',
+      free: {
+        name: 'Gratis',
+        tagline: 'Para empezar con tus primeros clientes',
+        features: ['Gestión de clientes', 'Los clientes que ya tienes nunca se eliminan'],
+        cta: 'Empezar gratis',
+      },
+      pro: {
+        tagline: 'Para quien está creciendo',
+        features: ['Todo incluido', 'Plantillas de entrenamiento y de dieta', 'Sin límite de clientes'],
+        cta: 'Pasar a Pro',
+      },
     },
     faq: {
       eyebrow: 'FAQ',

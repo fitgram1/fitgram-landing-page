@@ -4,8 +4,10 @@ import { Rocket, MessageCircle, Star, Gift, Tag, Users, ArrowRight } from 'lucid
 import { Badge } from '@/components/ui/badge';
 import { ButtonLink } from '@/components/ui/button';
 import { Reveal } from '@/components/Reveal';
+import { Parallax } from '@/components/Parallax';
 import { cn } from '@/lib/utils';
 import { useI18n } from '@/i18n';
+import { links } from '@/lib/links';
 
 const PERK_ICONS = [Rocket, MessageCircle, Star, Gift, Tag];
 
@@ -41,9 +43,12 @@ export function Offer() {
   }, [active]);
 
   return (
-    <section id="offer" className="py-20 md:py-24">
+    <section id="offer" className="py-16 md:py-24">
       <View className="container">
-        <View className="overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-primary/[0.07] via-card to-card p-8 shadow-xl sm:p-12">
+        <Reveal from="scale">
+        <View className="relative overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/[0.12] via-card to-card p-8 shadow-2xl shadow-primary/10 sm:p-12">
+          <Parallax speed={-0.12} className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-primary/25 blur-3xl" />
+          <Parallax speed={0.1} className="pointer-events-none absolute -bottom-24 -left-16 size-64 rounded-full bg-primary/15 blur-3xl" />
           <div ref={gridRef} className="relative grid gap-12 lg:grid-cols-2 lg:gap-16">
             {/* vertical divider between columns */}
             <div
@@ -71,12 +76,12 @@ export function Offer() {
                 </h2>
               </Reveal>
               <View className="mt-5 h-1 w-12 rounded-full bg-primary" />
-              <Reveal delay={200}>
+              <Reveal delay={200} from="left">
                 <p className="mt-5 max-w-sm text-[17px] leading-relaxed text-muted-foreground">
                   {t.offer.lead}
                 </p>
               </Reveal>
-              <Reveal delay={300}>
+              <Reveal delay={300} from="left">
                 <View className="mt-8 flex flex-row items-center gap-4 rounded-2xl border border-border bg-card/60 p-5">
                   <View className="grid size-12 shrink-0 place-items-center rounded-full border border-primary/30 bg-primary/10 text-primary">
                     <Users className="size-5" />
@@ -97,7 +102,7 @@ export function Offer() {
                 const Icon = PERK_ICONS[i];
                 const isActive = i === active;
                 return (
-                  <Reveal key={perk.title} delay={i * 80}>
+                  <Reveal key={perk.title} delay={i * 110} from="right">
                     <div ref={(el) => { perkRefs.current[i] = el; }}>
                       <View
                         className={cn(
@@ -139,7 +144,7 @@ export function Offer() {
 
           <View className="mt-10 flex items-center justify-center">
             <ButtonLink
-              href="#waitlist"
+              href={links.waitlist}
               size="pill"
               className="cta-shine rounded-md"
             >
@@ -148,6 +153,7 @@ export function Offer() {
             </ButtonLink>
           </View>
         </View>
+        </Reveal>
       </View>
     </section>
   );

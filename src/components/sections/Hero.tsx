@@ -80,7 +80,10 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={160}>
-            <p className="mt-6 max-w-xl text-[clamp(16px,1.6vw,19px)] text-muted-foreground">
+            <p
+              data-testid="hero-tagline"
+              className="mt-6 max-w-xl text-[clamp(17px,1.8vw,21px)] font-medium leading-snug text-foreground/80"
+            >
               {t.hero.sub}
             </p>
           </Reveal>

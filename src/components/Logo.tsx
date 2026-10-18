@@ -1,29 +1,19 @@
-import { View, Text } from 'react-native';
 import { cn } from '@/lib/utils';
+import { TLink } from '@/lib/nav';
 
-export function Logo({ className, active = false }: { className?: string; active?: boolean }) {
+/** Logótipo FitGram: leva sempre à página inicial (e ao topo, se já lá estiveres). */
+export function Logo({ className, compact = false }: { className?: string; compact?: boolean }) {
   return (
-    <a
-      href="#top"
-      aria-label="FitGram — go to top"
-      aria-current={active ? 'page' : undefined}
-      onClick={(e) => {
-        e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }}
-      className={cn('flex flex-row items-center gap-2.5', className)}
-    >
-      <View className="grid size-9 place-items-center rounded-[10px] bg-primary">
-        <Text className="text-lg font-extrabold text-primary-foreground">F</Text>
-      </View>
-      <Text
+    <TLink to="/" aria-label="FitGram — página inicial" className={cn('logo-in group inline-flex items-center gap-2.5 rounded-lg outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50', className)}>
+      <span
         className={cn(
-          'text-xl font-extrabold tracking-tight transition-colors',
-          active ? 'text-primary' : 'text-foreground',
+          'grid place-items-center rounded-[10px] bg-primary font-extrabold text-primary-foreground transition-[width,height,font-size,transform] duration-300 ease-out group-hover:-rotate-6',
+          compact ? 'size-8 text-base' : 'size-9 text-lg',
         )}
       >
-        FitGram
-      </Text>
-    </a>
+        F
+      </span>
+      <span className={cn('font-extrabold tracking-tight text-foreground transition-[font-size] duration-300', compact ? 'text-[19px]' : 'text-xl')}>FitGram</span>
+    </TLink>
   );
 }

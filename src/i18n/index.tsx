@@ -8,15 +8,10 @@ interface I18nContextValue {
 }
 
 const I18nContext = React.createContext<I18nContextValue | null>(null);
-const STORAGE_KEY = 'fitgram.locale';
 
+// Todo o texto visível está em português de Portugal; o seletor de língua foi retirado.
 function detectInitial(): Locale {
-  if (typeof window === 'undefined') return 'en';
-  const saved = window.localStorage.getItem(STORAGE_KEY) as Locale | null;
-  if (saved && saved in messages) return saved;
-  const lang = window.navigator.language.slice(0, 2).toLowerCase();
-  if (lang === 'pt' || lang === 'es') return lang;
-  return 'en';
+  return 'pt';
 }
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
@@ -24,12 +19,11 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
   const setLocale = React.useCallback((l: Locale) => {
     setLocaleState(l);
-    window.localStorage.setItem(STORAGE_KEY, l);
-    document.documentElement.lang = l;
+    document.documentElement.lang = 'pt-PT';
   }, []);
 
   React.useEffect(() => {
-    document.documentElement.lang = locale;
+    document.documentElement.lang = 'pt-PT';
   }, [locale]);
 
   const value = React.useMemo<I18nContextValue>(

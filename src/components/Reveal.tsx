@@ -6,9 +6,18 @@ interface RevealProps {
   /** Stagger delay in ms, applied once the element enters the viewport. */
   delay?: number;
   className?: string;
+  /** Direction the element enters from. */
+  from?: 'up' | 'left' | 'right' | 'scale';
 }
 
-export function Reveal({ children, delay = 0, className }: RevealProps) {
+const HIDDEN = {
+  up: 'translate-y-8 opacity-0 blur-[6px]',
+  left: '-translate-x-10 opacity-0 blur-[6px]',
+  right: 'translate-x-10 opacity-0 blur-[6px]',
+  scale: 'scale-[0.94] translate-y-6 opacity-0 blur-[6px]',
+} as const;
+
+export function Reveal({ children, delay = 0, className, from = 'up' }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [shown, setShown] = useState(false);
 
@@ -38,8 +47,8 @@ export function Reveal({ children, delay = 0, className }: RevealProps) {
       ref={ref}
       style={{ transitionDelay: shown ? `${delay}ms` : '0ms' }}
       className={cn(
-        'transition-all duration-700 ease-out will-change-transform motion-reduce:transition-none',
-        shown ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0',
+        'transition-all duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none',
+        shown ? 'translate-x-0 translate-y-0 scale-100 opacity-100 blur-0' : HIDDEN[from],
         className,
       )}
     >

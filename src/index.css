@@ -2,51 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
-/* FitGram design tokens — copied from apps/app/global.css (shadcn / RNR) */
+/* FitGram design tokens — dois temas desenhados à parte (não é uma inversão de cores). */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --background: 210 16.7% 97.6%;      /* #F8F9FA */
+    --foreground: 216 9.8% 10%;         /* #17191C */
+    --card: 0 0% 100%;                  /* #FFFFFF */
+    --card-foreground: 216 9.8% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 25 95% 53%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
+    --popover-foreground: 216 9.8% 10%;
+    --primary: 23.7 90.4% 51.2%;        /* #F36B12 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 15.4% 94.9%;       /* #F0F2F4 */
+    --secondary-foreground: 216 9.8% 10%;
+    --muted: 210 15.4% 94.9%;
+    --muted-foreground: 217.9 8.8% 42.2%; /* #626975 */
+    --accent: 210 15.4% 94.9%;
+    --accent-foreground: 216 9.8% 10%;
+    --elevated: 0 0% 100%;
+    --destructive: 0 72% 46%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 25 95% 53%;
-    --radius: 0.625rem;
+    --success: 152 60% 30%;
+    --border: 214.3 13.2% 89.6%;        /* #E1E4E8 */
+    --input: 214.3 13.2% 86%;
+    --ring: 23.7 90.4% 51.2%;
+    --radius: 0.75rem;
+    --shadow-card: 0 1px 2px hsl(216 20% 10% / 0.04), 0 8px 24px -12px hsl(216 20% 10% / 0.12);
+    --shadow-pop: 0 24px 60px -24px hsl(216 20% 10% / 0.28);
+    --header-bg: 210 16.7% 97.6% / 0.82;
+
+    /* Movimento (secção 15 do briefing) */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --d-press: 120ms;
+    --d-focus: 180ms;
+    --d-hover: 180ms;
+    --d-menu: 250ms;
+    --d-accordion: 300ms;
+    --d-page: 380ms;
+    --d-theme: 320ms;
   }
 
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 25 95% 53%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 70.9% 59.4%;
+    --background: 220 12% 4.9%;         /* #0B0C0E */
+    --foreground: 0 0% 96.9%;           /* #F7F7F7 */
+    --card: 216 10.2% 9.6%;             /* #16181B */
+    --card-foreground: 0 0% 96.9%;
+    --popover: 216 10.2% 9.6%;
+    --popover-foreground: 0 0% 96.9%;
+    --primary: 25 100% 54.9%;           /* #FF7919 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 217.5 11.1% 14.1%;     /* #202328 */
+    --secondary-foreground: 0 0% 96.9%;
+    --muted: 217.5 11.1% 14.1%;
+    --muted-foreground: 218.6 8% 65.9%; /* #A1A6AF */
+    --accent: 217.5 11.1% 14.1%;
+    --accent-foreground: 0 0% 96.9%;
+    --elevated: 217.5 11.1% 14.1%;
+    --destructive: 0 80% 64%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 25 95% 53%;
+    --success: 152 55% 52%;
+    --border: 216 9.4% 20.8%;           /* #30343A */
+    --input: 216 9.4% 20.8%;
+    --ring: 25 100% 54.9%;
+    --shadow-card: 0 1px 0 hsl(0 0% 100% / 0.03) inset, 0 12px 32px -16px hsl(0 0% 0% / 0.7);
+    --shadow-pop: 0 28px 70px -24px hsl(0 0% 0% / 0.85);
+    --header-bg: 220 12% 4.9% / 0.78;
   }
 }
 
@@ -55,7 +76,8 @@
     @apply border-border;
   }
   html {
-    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
@@ -139,5 +161,214 @@
   .animate-glow-pulse,
   .cta-shine::after {
     animation: none !important;
+  }
+}
+
+/* ---------- Troca de tema: só durante ~320 ms, para não interferir com o GSAP ---------- */
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition:
+    background-color var(--d-theme) var(--ease-in-out),
+    color var(--d-theme) var(--ease-in-out),
+    border-color var(--d-theme) var(--ease-in-out),
+    fill var(--d-theme) var(--ease-in-out),
+    stroke var(--d-theme) var(--ease-in-out),
+    box-shadow var(--d-theme) var(--ease-in-out) !important;
+}
+
+/* ---------- Transições de página (View Transitions + alternativa por CSS) ---------- */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--d-page);
+  animation-timing-function: var(--ease-out);
+}
+::view-transition-old(root) {
+  animation-name: vt-out;
+}
+::view-transition-new(root) {
+  animation-name: vt-in;
+}
+.site-header {
+  view-transition-name: site-header;
+}
+.site-footer {
+  view-transition-name: site-footer;
+}
+::view-transition-group(site-header),
+::view-transition-group(site-footer) {
+  animation-duration: 0s;
+}
+@keyframes vt-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+.page-enter {
+  animation: page-in var(--d-page) var(--ease-out) both;
+}
+
+/* ---------- Palco da história: cores acompanham o tema ---------- */
+.stage-chip-on {
+  background-color: hsl(var(--primary)) !important;
+  color: #fff !important;
+}
+.stage-card-on {
+  border-color: hsl(var(--primary)) !important;
+  background-color: hsl(var(--primary) / 0.12) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.theme-switching *,
+  html.theme-switching *::before,
+  html.theme-switching *::after {
+    transition: none !important;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+  .page-enter {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Seta dos botões: desliza ligeiramente no hover */
+#root .lucide-arrow-right {
+  transition: transform var(--d-hover) var(--ease-out);
+}
+#root a:hover > .lucide-arrow-right,
+#root button:hover:not(:disabled) > .lucide-arrow-right {
+  transform: translateX(3px);
+}
+
+/* Linha de pulso das páginas públicas: desenha-se uma vez à entrada */
+.pulse-draw {
+  stroke-dashoffset: 1;
+  animation: pulse-draw 1.4s var(--ease-in-out) 0.15s forwards;
+}
+@keyframes pulse-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pulse-draw {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Entradas escalonadas do cabeçalho e dos menus */
+@keyframes nav-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+.nav-in,
+.nav-in-li {
+  animation: nav-in 480ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 55ms + 120ms);
+}
+.nav-in-li > .nav-in {
+  animation: none;
+}
+@keyframes logo-in {
+  from {
+    opacity: 0;
+    transform: translateX(-10px) scale(0.96);
+  }
+}
+.logo-in {
+  animation: logo-in 520ms var(--ease-out) both;
+}
+@keyframes mega-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.mega-item-in {
+  animation: mega-item-in 320ms var(--ease-out) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-in,
+  .nav-in-li,
+  .logo-in,
+  .mega-item-in {
+    animation: none;
+  }
+}
+
+/* Sublinhado que "viaja" da esquerda para a direita nas ligações do rodapé */
+.link-underline {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 220ms var(--ease-out), color 150ms;
+  padding-bottom: 2px;
+}
+.link-underline:hover,
+.link-underline:focus-visible {
+  background-size: 100% 1px;
+}
+
+/* Passos do formulário: deslizam na horizontal, sem saltos de layout */
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+}
+@keyframes step-in-back {
+  from {
+    opacity: 0;
+    transform: translateX(-28px);
+  }
+}
+.step-in {
+  animation: step-in 320ms var(--ease-out) both;
+}
+.step-in-back {
+  animation: step-in-back 320ms var(--ease-out) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .step-in,
+  .step-in-back {
+    animation: none;
+  }
+}
+
+/* Hero vertical (ecrãs pequenos): entrada em cascata */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+.hero-rise {
+  animation: hero-rise 560ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 100ms + 150ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-rise {
+    animation: none;
   }
 }
