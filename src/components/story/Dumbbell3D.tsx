@@ -100,6 +100,7 @@ export default function Dumbbell3D({ state }: { state: MutableRefObject<Dumbbell
   return (
     <Canvas
       dpr={[1, 1.75]}
+      resize={{ offsetSize: true }}
       camera={{ position: [0, 0, 5.4], fov: 34 }}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       style={{ background: 'transparent' }}

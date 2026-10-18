@@ -26,7 +26,7 @@ const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matc
 /** Devolve o scrollY de uma âncora, ou null se o elemento ainda não existe. */
 export function anchorY(key: string): number | null {
   const a = ANCHORS[key];
-  const compact = window.matchMedia('(max-width: 899px)').matches || reduced();
+  const compact = reduced();
   const el = document.getElementById(compact ? a?.stacked ?? key : a?.id ?? key);
   if (!el) return null;
   const top = el.getBoundingClientRect().top + window.scrollY;

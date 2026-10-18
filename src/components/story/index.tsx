@@ -9,12 +9,12 @@ export function Story() {
   const compact = useIsCompact();
   const reduced = usePrefersReducedMotion();
   const webgl = useWebGL();
-  return compact || reduced ? <StoryStacked /> : <CinematicStory webgl={webgl} />;
+  return reduced ? <StoryStacked /> : <CinematicStory key={compact ? 'm' : 'd'} webgl={webgl} mobile={compact} />;
 }
 
 /** Capítulo 2: formatos, modalidades, ecossistema e final. */
 export function Chapter() {
   const compact = useIsCompact();
   const reduced = usePrefersReducedMotion();
-  return compact || reduced ? <Chapter2Stacked /> : <Chapter2 />;
+  return reduced ? <Chapter2Stacked /> : <Chapter2 key={compact ? 'm' : 'd'} mobile={compact} />;
 }
