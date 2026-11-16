@@ -19,8 +19,8 @@ const columns = [
     items: [
       { label: 'Planos', to: routes.pricing },
       { label: 'Perguntas frequentes', to: routes.faq },
-      { label: 'Candidatura à beta', to: routes.waitlist },
-      ...(links.login ? [{ label: 'Iniciar sessão', to: links.login }] : []),
+      { label: 'Criar conta', to: links.signup },
+      { label: 'Iniciar sessão', to: links.login },
     ],
   },
 ];
@@ -70,7 +70,11 @@ export function Footer() {
         </p>
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6">
-          <p className="text-[13px] text-muted-foreground">© 2026 FitGram.</p>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[13px] text-muted-foreground">
+            <p>© 2026 FitGram.</p>
+            <a href={links.privacy} className="link-underline outline-none transition-colors hover:text-primary focus-visible:text-primary">Política de privacidade</a>
+            <a href={links.terms} className="link-underline outline-none transition-colors hover:text-primary focus-visible:text-primary">Termos de utilização</a>
+          </div>
           <button
             type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })}

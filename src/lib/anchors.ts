@@ -18,7 +18,7 @@ export const ANCHORS: Record<string, Anchor> = {
   formatos: { id: 'formatos', p: 0.04, stacked: 'formatos' },
   modalidades: { id: 'formatos', p: 0.4, stacked: 'sec-modalidades' },
   ecossistema: { id: 'formatos', p: 0.66, stacked: 'sec-ecossistema' },
-  beta: { id: 'offer', p: 0, stacked: 'offer' },
+  comecar: { id: 'comecar', p: 0, stacked: 'comecar' },
 };
 
 const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;

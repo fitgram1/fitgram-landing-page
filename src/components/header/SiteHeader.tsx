@@ -198,7 +198,7 @@ export function SiteHeader() {
         </a>
         <div
           className={cn(
-            'mx-auto flex w-full max-w-[1120px] items-center justify-between gap-4 px-6 transition-[height] duration-300 ease-out',
+            'mx-auto flex w-full max-w-[1240px] items-center justify-between gap-4 px-6 transition-[height] duration-300 ease-out',
             scrolled ? 'h-[60px]' : 'h-[72px]',
           )}
         >
@@ -272,7 +272,7 @@ export function SiteHeader() {
           <div className="flex items-center gap-2">
             <ThemeToggle className="nav-in" />
             {links.login && (
-              <ButtonLink href={links.login} variant="ghost" size="sm" className="nav-in hidden min-[1240px]:inline-flex" style={{ ['--i' as string]: 7 }}>
+              <ButtonLink href={links.login} variant="ghost" size="sm" className="nav-in hidden min-[1360px]:inline-flex" style={{ ['--i' as string]: 7 }}>
                 <LogIn className="size-4" aria-hidden />
                 Entrar
               </ButtonLink>

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Story, Chapter } from '@/components/story';
-import { Offer } from '@/components/sections/Offer';
+import { GetApp } from '@/components/sections/GetApp';
 
 export function HomePage() {
   useEffect(() => {
@@ -11,7 +11,7 @@ export function HomePage() {
     <div id="conteudo">
       <Story />
       <Chapter />
-      <Offer />
+      <GetApp />
     </div>
   );
 }

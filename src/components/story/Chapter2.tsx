@@ -255,10 +255,10 @@ export function Chapter2({ mobile = false }: { mobile?: boolean }) {
             <div className={`fin relative flex flex-col items-center text-center ${mobile ? 'w-[340px]' : 'w-[900px]'}`}>
               <span className="grid size-14 place-items-center rounded-2xl bg-primary text-[28px] font-extrabold">F</span>
               <h2 className={`mt-6 font-extrabold tracking-tight ${mobile ? 'text-[34px] leading-[1.08]' : 'text-[64px] leading-[1.04]'}`}>O próximo nível começa contigo.</h2>
-              <p className={`mt-4 text-foreground/80 ${mobile ? 'text-[15px]' : 'text-[19px]'}`}>Entra na beta e ajuda a moldar o FitGram desde o primeiro dia.</p>
+              <p className={`mt-4 text-foreground/80 ${mobile ? 'text-[15px]' : 'text-[19px]'}`}>Cria a tua conta e começa hoje, no plano gratuito.</p>
               <div className="mt-8 flex gap-3">
-                <TLink to={links.waitlist} className="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-8 text-[16px] font-bold text-white shadow-lg shadow-primary/30 transition-transform hover:scale-[1.03]">
-                  Candidatar-me à beta
+                <TLink to={links.signup} className="inline-flex h-12 items-center gap-2 rounded-full bg-primary px-8 text-[16px] font-bold text-white shadow-lg shadow-primary/30 transition-transform hover:scale-[1.03]">
+                  Criar conta grátis
                   <ArrowRight className="size-5" aria-hidden />
                 </TLink>
               </div>

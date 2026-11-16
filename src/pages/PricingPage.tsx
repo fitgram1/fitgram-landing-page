@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check, Mail } from 'lucide-react';
 import { PublicPageLayout, PublicContainer } from '@/components/public/PublicPageLayout';
 import { PublicPageHero } from '@/components/public/PublicPageHero';
 import { PublicContentCard, PublicCTA } from '@/components/public/PublicParts';
@@ -18,7 +18,7 @@ export function PricingPage() {
 
   return (
     <PublicPageLayout title="Planos" description="Os planos do FitGram para treinadores.">
-      <PublicPageHero eyebrow="Planos" title={status === 'ready' ? <>{p.headPre}<span className="text-primary">{p.headHl}</span></> : <>Planos para <span className="text-primary">treinadores.</span></>} lead={status === 'ready' ? p.sub : 'Durante a beta o acesso é totalmente gratuito.'} />
+      <PublicPageHero eyebrow="Planos" title={status === 'ready' ? <>{p.headPre}<span className="text-primary">{p.headHl}</span></> : <>Planos para <span className="text-primary">treinadores.</span></>} lead={status === 'ready' ? p.sub : 'Começa no plano gratuito e passa ao Pro quando precisares.'} />
 
       <section className="py-16 md:py-20">
         <PublicContainer>
@@ -32,14 +32,20 @@ export function PricingPage() {
 
           {status === 'unavailable' && (
             <PublicContentCard className="mx-auto max-w-2xl text-center">
-              <h2 className="text-2xl font-bold tracking-tight">Os preços ainda não foram publicados</h2>
+              <h2 className="text-2xl font-bold tracking-tight">Os preços ainda não estão nesta página</h2>
               <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
-                Estamos a abrir uma beta privada para um grupo reduzido de treinadores, com acesso gratuito durante esse período. Quando os planos estiverem fechados, aparecem aqui.
+                Podes criar a conta e começar já no plano gratuito, sem cartão. Para saberes os valores do plano Pro, vê-os na app ou fala connosco.
               </p>
-              <ButtonLink href={routes.waitlist} size="lg" className="mt-6">
-                Candidatar-me à beta
-                <ArrowRight className="size-5" aria-hidden />
-              </ButtonLink>
+              <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+                <ButtonLink href={links.signup} size="lg">
+                  Criar conta grátis
+                  <ArrowRight className="size-5" aria-hidden />
+                </ButtonLink>
+                <ButtonLink href={links.contact} size="lg" variant="outline">
+                  <Mail className="size-4" aria-hidden />
+                  Contactar
+                </ButtonLink>
+              </div>
             </PublicContentCard>
           )}
 

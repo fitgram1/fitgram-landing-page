@@ -1,25 +1,43 @@
 /**
- * Destinos dos CTAs. A app web (login/registo reais) é configurada por ambiente:
- *   VITE_APP_URL=https://… yarn build
- * Sem a variável não existe página de autenticação: "Começar" leva à candidatura
- * à beta (rota real desta landing) e "Entrar" não é apresentado (sem destino, sem botão morto).
+ * Destinos dos CTAs. A landing é a página pública do FitGram e os botões levam à app.
+ *
+ * - App web (login/registo reais): https://app.fitgram.pt, ou outra via `VITE_APP_URL`
+ *   (útil para apontar a staging ao testar).
+ * - Lojas: os botões da App Store e do Google Play só aparecem quando existem os links
+ *   (`VITE_APP_STORE_URL` e `VITE_PLAY_STORE_URL`); sem eles não há botões mortos.
  */
-const raw = (import.meta.env.VITE_APP_URL as string | undefined)?.replace(/\/$/, '');
+const DEFAULT_APP_URL = 'https://app.fitgram.pt';
+
+const env = (value: unknown): string | null => {
+  const v = typeof value === 'string' ? value.trim().replace(/\/$/, '') : '';
+  return v.length > 0 ? v : null;
+};
+
+const appUrl = env(import.meta.env.VITE_APP_URL) ?? DEFAULT_APP_URL;
 
 export const routes = {
   home: '/',
   pricing: '/precos',
   faq: '/perguntas-frequentes',
-  waitlist: '/lista-de-espera',
+  /** Rota antiga da candidatura à beta: hoje só redireciona para a página inicial. */
+  legacyWaitlist: '/lista-de-espera',
 } as const;
 
 export const links = {
-  waitlist: routes.waitlist,
   /** Visão geral do produto (cena da história onde o treino ganha forma). */
   explore: '/#explorar',
   trainers: '/#treinadores',
-  login: raw ? `${raw}/login` : null,
-  signup: raw ? `${raw}/register` : routes.waitlist,
-  hasApp: !!raw,
+  /** Secção «Começa já» no fim da página inicial. */
+  getStarted: '/#comecar',
+  appUrl,
+  login: `${appUrl}/login`,
+  signup: `${appUrl}/register`,
+  privacy: `${appUrl}/privacy`,
+  terms: `${appUrl}/terms`,
+  appStore: env(import.meta.env.VITE_APP_STORE_URL),
+  playStore: env(import.meta.env.VITE_PLAY_STORE_URL),
   contact: 'mailto:fitgrampt@gmail.com',
 } as const;
+
+/** Host da app web sem protocolo, para mostrar no texto (ex.: «app.fitgram.pt»). */
+export const appHost = appUrl.replace(/^https?:\/\//, '');

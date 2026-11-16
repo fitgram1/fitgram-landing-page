@@ -14,7 +14,7 @@ import { links, routes } from '@/lib/links';
 export function FaqPage() {
   const { t } = useI18n();
   return (
-    <PublicPageLayout title="Perguntas frequentes" description="Tudo o que precisas de saber sobre o FitGram: disponibilidade, custo e o que esperamos de ti na beta.">
+    <PublicPageLayout title="Perguntas frequentes" description="Tudo o que precisas de saber sobre o FitGram: onde o usar, quanto custa e como começar.">
       <PublicPageHero eyebrow="Perguntas frequentes" title={<>Tudo o que precisas de saber sobre o <span className="text-primary">FitGram.</span></>} lead="Respostas curtas e diretas. Se faltar alguma, escreve-nos." />
       <section className="py-16 md:py-20">
         <PublicContainer>
@@ -36,7 +36,7 @@ export function FaqPage() {
           </div>
         </PublicContainer>
       </section>
-      <PublicCTA title="Pronto para entrar na beta?" body="Conta-nos como trabalhas hoje. Estamos a selecionar um grupo pequeno de treinadores." to={routes.waitlist} label="Candidatar-me à beta" />
+      <PublicCTA title="Pronto para começar?" body="Cria a tua conta e começa no plano gratuito. Passas ao Pro só quando precisares." to={links.signup} label="Criar conta grátis" secondaryTo={routes.pricing} secondaryLabel="Ver planos" />
     </PublicPageLayout>
   );
 }
