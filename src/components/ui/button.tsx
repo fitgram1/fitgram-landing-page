@@ -56,7 +56,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 );
 Button.displayName = 'Button';
 
-/** Ligação com aspeto de botão. `href` pode ser uma rota (`/precos`), uma âncora da história (`/#explorar`) ou um URL externo. */
+/** Ligação com aspeto de botão. `href` pode ser uma rota (`/perguntas-frequentes`), uma âncora da história (`/#explorar`) ou um URL externo. */
 export interface ButtonLinkProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement>,
     VariantProps<typeof buttonVariants> {

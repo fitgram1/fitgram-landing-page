@@ -3,7 +3,6 @@ import { I18nProvider } from '@/i18n';
 import { ThemeProvider } from '@/theme';
 import { SiteLayout } from '@/components/SiteLayout';
 import { HomePage } from '@/pages/HomePage';
-import { PricingPage } from '@/pages/PricingPage';
 import { FaqPage } from '@/pages/FaqPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { routes } from '@/lib/links';
@@ -19,7 +18,8 @@ export default function App() {
           <Routes>
             <Route element={<SiteLayout />}>
               <Route index element={<HomePage />} />
-              <Route path={routes.pricing} element={<PricingPage />} />
+              {/* Preços ainda não são públicos: /precos vai para a página inicial. */}
+              <Route path={routes.legacyPricing} element={<Navigate to={routes.home} replace />} />
               <Route path={routes.faq} element={<FaqPage />} />
               {/* A candidatura à beta acabou: links antigos vão para a página inicial. */}
               <Route path={routes.legacyWaitlist} element={<Navigate to={routes.home} replace />} />

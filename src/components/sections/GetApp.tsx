@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { Apple, ArrowRight, Gift, Layers, LogIn, MonitorSmartphone, Play, type LucideIcon } from 'lucide-react';
+import { Apple, ArrowRight, Layers, LogIn, MonitorSmartphone, Play, Users, type LucideIcon } from 'lucide-react';
 import { ButtonLink } from '@/components/ui/button';
 import { Reveal } from '@/components/Reveal';
 import { Parallax } from '@/components/Parallax';
@@ -11,9 +11,9 @@ interface Point {
   body: string;
 }
 
-/** Só factos do produto: plano gratuito (freegram), treino + nutrição + progresso, app web em todos os ecrãs. */
+/** Só factos do produto (sem preços, que ainda não são públicos). */
 const POINTS: Point[] = [
-  { icon: Gift, title: 'Começa no plano gratuito', body: 'Cria a conta sem cartão e passa ao Pro só quando precisares.' },
+  { icon: Users, title: 'Para treinadores e atletas', body: 'O treinador cria os planos; o atleta treina, regista as sessões e envia os check-ins.' },
   { icon: Layers, title: 'Tudo num só sítio', body: 'Treino, nutrição, check-ins e progresso dos teus atletas.' },
   { icon: MonitorSmartphone, title: 'No computador e no telemóvel', body: `A mesma conta em ${appHost}, em qualquer ecrã.` },
 ];
@@ -48,7 +48,7 @@ export function GetApp() {
                 <Reveal delay={300} from="left">
                   <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                     <ButtonLink href={links.signup} size="lg" className="cta-shine">
-                      Criar conta grátis
+                      Criar conta
                       <ArrowRight className="size-5" aria-hidden />
                     </ButtonLink>
                     <ButtonLink href={links.login} size="lg" variant="outline">

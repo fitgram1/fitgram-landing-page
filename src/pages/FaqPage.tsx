@@ -5,7 +5,7 @@ import { PublicPageHero } from '@/components/public/PublicPageHero';
 import { PublicContentCard, PublicCTA } from '@/components/public/PublicParts';
 import { ButtonLink } from '@/components/ui/button';
 import { useI18n } from '@/i18n';
-import { links, routes } from '@/lib/links';
+import { links } from '@/lib/links';
 
 /**
  * Só existem 4 perguntas reais: não se justifica pesquisa nem categorias (seriam vazias).
@@ -14,7 +14,7 @@ import { links, routes } from '@/lib/links';
 export function FaqPage() {
   const { t } = useI18n();
   return (
-    <PublicPageLayout title="Perguntas frequentes" description="Tudo o que precisas de saber sobre o FitGram: onde o usar, quanto custa e como começar.">
+    <PublicPageLayout title="Perguntas frequentes" description="Tudo o que precisas de saber sobre o FitGram: onde o usar e como começar.">
       <PublicPageHero eyebrow="Perguntas frequentes" title={<>Tudo o que precisas de saber sobre o <span className="text-primary">FitGram.</span></>} lead="Respostas curtas e diretas. Se faltar alguma, escreve-nos." />
       <section className="py-16 md:py-20">
         <PublicContainer>
@@ -36,7 +36,7 @@ export function FaqPage() {
           </div>
         </PublicContainer>
       </section>
-      <PublicCTA title="Pronto para começar?" body="Cria a tua conta e começa no plano gratuito. Passas ao Pro só quando precisares." to={links.signup} label="Criar conta grátis" secondaryTo={routes.pricing} secondaryLabel="Ver planos" />
+      <PublicCTA title="Pronto para começar?" body="Cria a tua conta e leva os treinos, a nutrição e o progresso dos teus atletas para um só sítio." to={links.signup} label="Criar conta" secondaryTo={links.login} secondaryLabel="Entrar" />
     </PublicPageLayout>
   );
 }

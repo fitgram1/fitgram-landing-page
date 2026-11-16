@@ -13,7 +13,7 @@ interface PublicPageLayoutProps {
 }
 
 /**
- * Estrutura partilhada pelas páginas finais (Preços e Perguntas frequentes).
+ * Estrutura partilhada pelas páginas finais (Perguntas frequentes).
  * O cabeçalho e o rodapé vêm do SiteLayout; aqui vive o que é comum ao conteúdo.
  */
 export function PublicPageLayout({ title, description, children }: PublicPageLayoutProps) {

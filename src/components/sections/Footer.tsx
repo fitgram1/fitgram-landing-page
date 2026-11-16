@@ -17,7 +17,6 @@ const columns = [
   {
     title: 'FitGram',
     items: [
-      { label: 'Planos', to: routes.pricing },
       { label: 'Perguntas frequentes', to: routes.faq },
       { label: 'Criar conta', to: links.signup },
       { label: 'Iniciar sessão', to: links.login },

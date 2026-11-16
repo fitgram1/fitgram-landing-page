@@ -17,10 +17,11 @@ const appUrl = env(import.meta.env.VITE_APP_URL) ?? DEFAULT_APP_URL;
 
 export const routes = {
   home: '/',
-  pricing: '/precos',
   faq: '/perguntas-frequentes',
   /** Rota antiga da candidatura à beta: hoje só redireciona para a página inicial. */
   legacyWaitlist: '/lista-de-espera',
+  /** Página de preços: ainda não é pública; redireciona para a página inicial. */
+  legacyPricing: '/precos',
 } as const;
 
 export const links = {

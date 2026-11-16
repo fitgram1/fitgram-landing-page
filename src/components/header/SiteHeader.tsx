@@ -17,7 +17,6 @@ import { navItems } from './navData';
 function useActiveKey(pathname: string): string | null {
   const [key, setKey] = useState<string | null>(null);
   useEffect(() => {
-    if (pathname === routes.pricing) return setKey('planos');
     if (pathname === routes.faq) return setKey('faq');
     if (pathname !== routes.home) return setKey(null);
     let raf = 0;

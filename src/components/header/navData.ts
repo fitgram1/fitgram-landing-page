@@ -1,6 +1,6 @@
 import {
   Dumbbell, ClipboardList, Layers, TrendingUp, Utensils, ChefHat, Scale, FileText, Camera, Ruler,
-  Users, MessageCircle, Calendar, CreditCard, Timer, type LucideIcon,
+  Users, MessageCircle, Calendar, Timer, type LucideIcon,
 } from 'lucide-react';
 import { routes } from '@/lib/links';
 
@@ -61,7 +61,6 @@ export const megaCategories: MegaCategory[] = [
       { label: 'Atletas e planos', hint: 'Contexto, objetivos e histórico', to: '/#treinadores', icon: Users },
       { label: 'Conversas', hint: 'Tudo num só lugar', to: '/#treinadores', icon: MessageCircle },
       { label: 'Agenda', hint: 'Sessões e compromissos', to: '/#treinadores', icon: Calendar },
-      { label: 'Planos e preços', hint: 'Escalões do FitGram', to: routes.pricing, icon: CreditCard },
     ],
   },
 ];
@@ -79,6 +78,5 @@ export const navItems: NavItem[] = [
   { key: 'treinadores', label: 'Para treinadores', to: '/#treinadores' },
   { key: 'atletas', label: 'Para atletas', to: '/#atletas' },
   { key: 'modalidades', label: 'Modalidades', to: '/#modalidades' },
-  { key: 'planos', label: 'Planos', to: routes.pricing },
   { key: 'faq', label: 'Perguntas frequentes', to: routes.faq },
 ];

@@ -74,7 +74,7 @@ export function Chapter2Stacked() {
         <div className="mx-auto mt-20 flex max-w-[520px] flex-col items-center text-center">
           <h2 className="text-[38px] font-extrabold leading-[1.05] tracking-tight">O próximo nível começa contigo.</h2>
           <TLink to={links.signup} className="mt-6 inline-flex h-12 items-center gap-2 rounded-full bg-primary px-7 font-bold">
-            Criar conta grátis
+            Criar conta
             <ArrowRight className="size-5" aria-hidden />
           </TLink>
         </div>
