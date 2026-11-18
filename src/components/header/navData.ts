@@ -58,7 +58,8 @@ export function getNavItems(t: Messages): NavItem[] {
   return [
     { key: 'funcionalidades', label: t.nav.features, mega: true, icon: Dumbbell },
     { key: 'modalidades', label: t.nav.sports, to: '/#modalidades' },
-    { key: 'precos', label: t.nav.pricing, to: '/#precos' },
+    // Preços escondidos por agora.
+    // { key: 'precos', label: t.nav.pricing, to: '/#precos' },
     { key: 'faq', label: t.nav.faq, to: routes.faq },
   ];
 }

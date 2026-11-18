@@ -3,7 +3,8 @@ import { useT } from '@/i18n';
 import { Story, Chapter } from '@/components/story';
 import { GetApp } from '@/components/sections/GetApp';
 import { Duo } from '@/components/sections/Duo';
-import { Pricing } from '@/components/sections/Pricing';
+// Preços escondidos por agora (18/11): descomentar para voltar a mostrar.
+// import { Pricing } from '@/components/sections/Pricing';
 
 export function HomePage() {
   const { meta } = useT();
@@ -16,7 +17,7 @@ export function HomePage() {
       <Story />
       <Chapter />
       <Duo />
-      <Pricing />
+      {/* <Pricing /> */}
       <GetApp />
     </div>
   );

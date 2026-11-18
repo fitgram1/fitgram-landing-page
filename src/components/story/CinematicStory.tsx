@@ -102,11 +102,12 @@ function Heading({ cls, title, sub, center = false, mobile = false }: { cls: str
 function HeroCta({ mobile = false }: { mobile?: boolean }) {
   const t = useT();
   return (
+    // «Começar agora» → «Tenho interesse» enquanto o registo está escondido.
     <TLink
-      to={links.signup}
+      to={links.interest(t.getApp.interestSubject)}
       className={`${mobile ? 'w-full justify-center ' : ''}inline-flex h-12 items-center gap-2 rounded-full bg-primary px-7 text-[16px] font-bold text-primary-foreground shadow-lg shadow-primary/30 transition-transform duration-150 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground`}
     >
-      {t.story.hero.primary}
+      {t.getApp.interested}
       <ArrowRight className="size-5" aria-hidden />
     </TLink>
   );

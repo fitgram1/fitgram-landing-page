@@ -54,8 +54,9 @@ export function StoryStacked() {
           <h1 className="hero-rise mt-5 text-[42px] font-extrabold leading-[1.04] tracking-tight" style={{ ['--i' as string]: 1 }}>{copy.hero.headline}</h1>
           <p className="hero-rise mt-4 text-[17px] text-foreground/80" style={{ ['--i' as string]: 2 }}>{copy.hero.sub}</p>
           <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-            <TLink to={links.signup} className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-7 text-[16px] font-bold text-primary-foreground transition-transform duration-150 active:scale-[0.97]">
-              {copy.hero.primary}
+            {/* «Começar agora» → «Tenho interesse» enquanto o registo está escondido. */}
+            <TLink to={links.interest(t.getApp.interestSubject)} className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-primary px-7 text-[16px] font-bold text-primary-foreground transition-transform duration-150 active:scale-[0.97]">
+              {t.getApp.interested}
               <ArrowRight className="size-5" aria-hidden />
             </TLink>
             <TLink to={links.explore} className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-foreground/25 px-7 text-[16px] font-semibold transition-transform duration-150 active:scale-[0.97]">

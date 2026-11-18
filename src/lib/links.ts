@@ -38,6 +38,10 @@ export const links = {
   appStore: env(import.meta.env.VITE_APP_STORE_URL),
   playStore: env(import.meta.env.VITE_PLAY_STORE_URL),
   contact: 'mailto:fitgrampt@gmail.com',
+  /** «Tenho interesse»: um email com o assunto já escrito (na língua da página). */
+  interest: (subject: string) => `mailto:fitgrampt@gmail.com?subject=${encodeURIComponent(subject)}`,
+  /** Perfil do FitGram no Instagram. */
+  instagram: 'https://www.instagram.com/fitgram_app/',
 } as const;
 
 /** Host da app web sem protocolo, para mostrar no texto (ex.: «app.fitgram.pt»). */

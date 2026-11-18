@@ -37,7 +37,15 @@ export function FaqPage() {
           </div>
         </PublicContainer>
       </section>
-      <PublicCTA title={f.ctaTitle} body={f.ctaBody} to={links.signup} label={t.common.signup} secondaryTo={links.login} secondaryLabel={t.common.login} />
+      {/* Registo escondido por agora: «Tenho interesse» e Instagram em vez de «Criar conta» / «Entrar». */}
+      <PublicCTA
+        title={f.ctaTitle}
+        body={f.ctaBody}
+        to={links.interest(t.getApp.interestSubject)}
+        label={t.getApp.interested}
+        secondaryTo={links.instagram}
+        secondaryLabel={t.getApp.instagram}
+      />
     </PublicPageLayout>
   );
 }

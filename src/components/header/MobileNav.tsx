@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { ArrowRight, ChevronDown, LogIn, X } from 'lucide-react';
+import { ChevronDown, X } from 'lucide-react';
+// Para «Começar agora» / «Entrar» (escondidos por agora):
+// import { ArrowRight, LogIn } from 'lucide-react';
+// import { ButtonLink } from '@/components/ui/button';
+// import { links } from '@/lib/links';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { ButtonLink } from '@/components/ui/button';
 import { TLink, useGo } from '@/lib/nav';
-import { links } from '@/lib/links';
 import { cn } from '@/lib/utils';
 import { getMegaCategories, getNavItems } from './navData';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
@@ -178,6 +180,7 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
         </ul>
       </nav>
 
+      {/* «Começar agora» e «Entrar» escondidos por agora (18/11).
       <div className="shrink-0 border-t border-border bg-background px-6 pb-6 pt-4">
         <ButtonLink href={links.signup} size="lg" className="w-full" onClick={nav(links.signup)}>
           {t.common.getStarted}
@@ -190,6 +193,7 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
           </ButtonLink>
         )}
       </div>
+      */}
     </div>
   );
 }

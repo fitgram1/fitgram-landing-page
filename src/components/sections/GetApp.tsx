@@ -1,5 +1,7 @@
 import { View } from 'react-native';
-import { Apple, ArrowRight, Layers, LogIn, MonitorSmartphone, Play, Users, type LucideIcon } from 'lucide-react';
+import { Apple, Instagram, Layers, Mail, MonitorSmartphone, Play, Users, type LucideIcon } from 'lucide-react';
+// Para «Criar conta» / «Entrar» (escondidos por agora):
+// import { ArrowRight, LogIn } from 'lucide-react';
 import { ButtonLink } from '@/components/ui/button';
 import { Reveal } from '@/components/Reveal';
 import { Parallax } from '@/components/Parallax';
@@ -44,6 +46,7 @@ export function GetApp() {
                 </Reveal>
                 <Reveal delay={300} from="left">
                   <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                    {/* «Criar conta» e «Entrar» escondidos por agora (18/11).
                     <ButtonLink href={links.signup} size="lg" className="cta-shine">
                       {t.common.signup}
                       <ArrowRight className="size-5" aria-hidden />
@@ -51,6 +54,18 @@ export function GetApp() {
                     <ButtonLink href={links.login} size="lg" variant="outline">
                       <LogIn className="size-4" aria-hidden />
                       {t.common.login}
+                    </ButtonLink>
+                    */}
+                    <ButtonLink
+                      href={links.interest(g.interestSubject)}
+                      size="lg"
+                      className="cta-shine">
+                      <Mail className="size-4" aria-hidden />
+                      {g.interested}
+                    </ButtonLink>
+                    <ButtonLink href={links.instagram} size="lg" variant="outline" target="_blank" rel="noopener noreferrer">
+                      <Instagram className="size-4" aria-hidden />
+                      {g.instagram}
                     </ButtonLink>
                   </div>
                 </Reveal>

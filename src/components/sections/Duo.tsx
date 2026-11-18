@@ -1,6 +1,8 @@
 import { useRef, type PointerEvent } from 'react';
-import { ArrowRight, Trophy, Send, type LucideIcon } from 'lucide-react';
-import { ButtonLink } from '@/components/ui/button';
+import { Trophy, Send, type LucideIcon } from 'lucide-react';
+// Para o botão «Preços» (escondido por agora):
+// import { ArrowRight } from 'lucide-react';
+// import { ButtonLink } from '@/components/ui/button';
 import { Reveal } from '@/components/Reveal';
 import { Parallax } from '@/components/Parallax';
 import duo from '@/assets/fitgram-treinador-atleta.webp';
@@ -60,6 +62,7 @@ export function Duo() {
             </p>
           </Reveal>
 
+          {/* Preços escondidos por agora.
           <Reveal delay={260} from="left">
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <ButtonLink href="/#precos" size="lg" variant="outline">
@@ -68,6 +71,7 @@ export function Duo() {
               </ButtonLink>
             </div>
           </Reveal>
+          */}
         </div>
 
         <Reveal from="scale" delay={120}>

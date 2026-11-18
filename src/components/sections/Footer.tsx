@@ -16,15 +16,17 @@ export function Footer() {
         { label: t.nav.forTrainers, to: '/#treinadores' },
         { label: t.nav.forAthletes, to: '/#atletas' },
         { label: t.nav.sports, to: '/#modalidades' },
-        { label: t.nav.pricing, to: '/#precos' },
+        // Preços escondidos por agora.
+        // { label: t.nav.pricing, to: '/#precos' },
       ],
     },
     {
       title: 'FitGram',
       items: [
         { label: t.nav.faq, to: routes.faq },
-        { label: t.common.signup, to: links.signup },
-        { label: t.common.login, to: links.login },
+        // «Criar conta» e «Entrar» escondidos por agora (18/11).
+        // { label: t.common.signup, to: links.signup },
+        // { label: t.common.login, to: links.login },
       ],
     },
   ];

@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { ArrowRight, ChevronDown, LogIn } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
+// Para «Entrar» / «Começar agora» (escondidos por agora):
+// import { ArrowRight, LogIn } from 'lucide-react';
+// import { ButtonLink } from '@/components/ui/button';
 import { Logo } from '@/components/Logo';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { ScrollProgress } from '@/components/ScrollProgress';
-import { ButtonLink } from '@/components/ui/button';
 import { TLink } from '@/lib/nav';
 import { anchorY } from '@/lib/anchors';
-import { links, routes } from '@/lib/links';
+import { routes } from '@/lib/links';
+// import { links } from '@/lib/links';
 import { cn } from '@/lib/utils';
 import { MegaMenu } from './MegaMenu';
 import { MobileNav } from './MobileNav';
@@ -279,6 +282,7 @@ export function SiteHeader() {
           <div className="flex items-center gap-2">
             <LanguageSwitcher className="nav-in hidden sm:block" />
             <ThemeToggle className="nav-in" />
+            {/* «Entrar» e «Começar agora» escondidos por agora (18/11).
             {links.login && (
               <ButtonLink href={links.login} variant="ghost" size="sm" className="nav-in hidden min-[1280px]:inline-flex" style={{ ['--i' as string]: 7 }}>
                 <LogIn className="size-4" aria-hidden />
@@ -289,6 +293,7 @@ export function SiteHeader() {
               {t.common.getStarted}
               <ArrowRight className="size-4" aria-hidden />
             </ButtonLink>
+            */}
 
             <button
               ref={hamburgerRef}
