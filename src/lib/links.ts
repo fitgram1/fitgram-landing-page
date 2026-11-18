@@ -32,7 +32,7 @@ export const links = {
   getStarted: '/#comecar',
   appUrl,
   login: `${appUrl}/login`,
-  signup: `${appUrl}/register`,
+  signup: `${appUrl}/signup`,
   privacy: `${appUrl}/privacy`,
   terms: `${appUrl}/terms`,
   appStore: env(import.meta.env.VITE_APP_STORE_URL),
