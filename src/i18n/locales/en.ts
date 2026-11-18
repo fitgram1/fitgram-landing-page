@@ -199,6 +199,7 @@ export const en: Dict = {
     recommended: 'Recommended',
     cta: 'Choose plan',
     ctaFree: 'Start for free',
+    everythingIn: 'Everything in {plan}, plus:',
     note: 'Prices in euros. You can change or cancel your plan in the app.',
     features: {
       basic_trainee_management: 'Athlete management',

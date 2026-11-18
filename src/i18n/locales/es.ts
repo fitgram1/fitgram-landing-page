@@ -199,6 +199,7 @@ export const es: Dict = {
     recommended: 'Recomendado',
     cta: 'Elegir plan',
     ctaFree: 'Empezar gratis',
+    everythingIn: 'Todo lo de {plan}, más:',
     note: 'Precios en euros. Puedes cambiar o cancelar tu plan en la app.',
     features: {
       basic_trainee_management: 'Gestión de atletas',

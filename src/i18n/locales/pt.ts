@@ -202,6 +202,7 @@ export const pt = {
     recommended: 'Recomendado',
     cta: 'Escolher plano',
     ctaFree: 'Começar grátis',
+    everythingIn: 'Tudo do {plan}, mais:',
     note: 'Preços em euros. Podes mudar ou cancelar o plano na app.',
     features: {
       basic_trainee_management: 'Gestão de atletas',

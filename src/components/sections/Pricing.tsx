@@ -16,26 +16,21 @@ export function Pricing() {
   const maxSave = savingPct(PLANS[1], period);
 
   return (
-    <section id="precos" aria-labelledby="precos-title" className="relative overflow-hidden py-20 md:py-28">
+    <section id="precos" aria-labelledby="precos-title" className="relative flex min-h-[calc(100svh-4rem)] flex-col justify-center overflow-hidden py-10 md:py-12">
       <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[900px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" aria-hidden />
       <div className="container relative">
         <Reveal>
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="inline-flex items-center gap-2 text-[13px] font-bold uppercase tracking-[0.2em] text-primary">
-              <span className="h-px w-8 bg-primary" aria-hidden />
-              {pr.eyebrow}
-              <span className="h-px w-8 bg-primary" aria-hidden />
-            </p>
-            <h2 id="precos-title" className="mt-4 text-[clamp(30px,4.4vw,50px)] font-extrabold leading-[1.05] tracking-tight">
+          <div className="mx-auto max-w-3xl text-center">
+                        <h2 id="precos-title" className="text-[clamp(28px,3.4vw,40px)] font-extrabold leading-[1.1] tracking-tight">
               {pr.title}
             </h2>
-            <p className="mt-4 text-[17px] text-muted-foreground">{pr.sub}</p>
+            <p className="mt-2 text-[16px] text-muted-foreground">{pr.sub}</p>
           </div>
         </Reveal>
 
         {/* períodos de faturação */}
         <Reveal delay={120}>
-          <div className="mt-10 flex flex-col items-center gap-3">
+          <div className="mt-6 flex flex-col items-center gap-1.5">
             <div role="radiogroup" aria-label={pr.period} className="relative grid grid-cols-5 rounded-full border border-border bg-card p-1">
               <span
                 aria-hidden
@@ -64,14 +59,14 @@ export function Pricing() {
           </div>
         </Reveal>
 
-        <div className="mx-auto mt-8 grid max-w-6xl items-stretch gap-5 lg:grid-cols-3">
+        <div className="mx-auto mt-4 grid max-w-6xl items-stretch gap-4 lg:grid-cols-3">
           {PLANS.map((plan, i) => (
             <Reveal key={plan.slug} delay={180 + i * 100} from="scale" className="h-full">
               <PlanCard plan={plan} period={period} />
             </Reveal>
           ))}
         </div>
-        <p className="mt-8 text-center text-[13px] text-muted-foreground">{pr.note}</p>
+        <p className="mt-5 text-center text-[12px] text-muted-foreground">{pr.note}</p>
       </div>
     </section>
   );
@@ -85,15 +80,21 @@ function PlanCard({ plan, period }: { plan: Plan; period: Period }) {
   const free = total === undefined;
   const perMonth = free ? 0 : Math.round(total / period);
   const save = savingPct(plan, period);
+  // Cada plano mostra só o que acrescenta ao anterior.
+  const i = PLANS.findIndex((p) => p.slug === plan.slug);
+  const prev = i > 0 ? PLANS[i - 1] : null;
+  const own = prev ? plan.features.filter((f) => !prev.features.includes(f)) : plan.features;
 
   return (
     <div className={cn('relative h-full rounded-3xl p-[1.5px]', plan.recommended ? 'price-glow' : 'bg-border')}>
-      <div className={cn('relative flex h-full flex-col rounded-[calc(1.5rem-1.5px)] p-7', plan.recommended ? 'bg-card' : 'bg-card/95')}>
-        <p className="text-[15px] font-extrabold tracking-tight">{plan.name}</p>
-        <p className="mt-1 text-[13px] text-muted-foreground">{fmt(pr.upTo, { n: plan.maxTrainees })}</p>
+      <div className={cn('relative flex h-full flex-col rounded-[calc(1.5rem-1.5px)] p-6', plan.recommended ? 'bg-card' : 'bg-card/95')}>
+        <div className="flex items-baseline justify-between gap-3">
+          <p className="text-[15px] font-extrabold tracking-tight">{plan.name}</p>
+          <p className="text-[13px] text-muted-foreground">{fmt(pr.upTo, { n: plan.maxTrainees })}</p>
+        </div>
 
-        <div className="mt-6 flex items-end gap-1.5">
-          <span key={`${plan.slug}-${period}-${lang}`} className="price-pop text-[44px] font-black leading-none tracking-tight tabular-nums">
+        <div className="mt-4 flex items-end gap-1.5">
+          <span key={`${plan.slug}-${period}-${lang}`} className="price-pop text-[38px] font-black leading-none tracking-tight tabular-nums">
             {free ? pr.free : formatMoney(perMonth, lang)}
           </span>
           {!free && <span className="pb-1.5 text-[14px] font-semibold text-muted-foreground">{pr.perMonth}</span>}
@@ -103,14 +104,15 @@ function PlanCard({ plan, period }: { plan: Plan; period: Period }) {
           {save > 0 && <span className="ml-2 rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-bold text-primary">−{save}%</span>}
         </p>
 
-        <ButtonLink href={links.signup} size="lg" variant={plan.recommended ? 'default' : 'outline'} className={cn('mt-7 w-full', plan.recommended && 'cta-shine')}>
+        <ButtonLink href={links.signup} size="lg" variant={plan.recommended ? 'default' : 'outline'} className={cn('mt-5 w-full', plan.recommended && 'cta-shine')}>
           {free ? pr.ctaFree : pr.cta}
           <ArrowRight className="size-4" aria-hidden />
         </ButtonLink>
 
-        <ul className="mt-7 space-y-3 border-t border-border pt-6">
-          {plan.features.map((f) => (
-            <li key={f} className="flex gap-2.5 text-[14px] leading-snug">
+        <ul className="mt-5 space-y-2 border-t border-border pt-4">
+          {prev && <li className="text-[13px] font-semibold text-foreground">{fmt(pr.everythingIn, { plan: prev.name })}</li>}
+          {own.map((f) => (
+            <li key={f} className="flex gap-2.5 text-[13.5px] leading-snug">
               <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-primary/15 text-primary">
                 <Check className="size-3" aria-hidden />
               </span>
