@@ -1,9 +1,11 @@
 import { useId } from 'react';
 import { useTheme } from '@/theme';
+import { useT } from '@/i18n';
 
 /** Sol ↔ lua: o núcleo cresce, a máscara desliza e os raios recolhem (≈320 ms). */
 export function ThemeToggle({ className = '' }: { className?: string }) {
   const { theme, toggleTheme } = useTheme();
+  const t = useT();
   const isDark = theme === 'dark';
   const maskId = `tt-${useId().replace(/:/g, '')}`;
   return (
@@ -11,8 +13,8 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
       type="button"
       onClick={toggleTheme}
       aria-pressed={isDark}
-      aria-label={isDark ? 'Mudar para o tema claro' : 'Mudar para o tema escuro'}
-      title={isDark ? 'Tema claro' : 'Tema escuro'}
+      aria-label={isDark ? t.common.themeToLight : t.common.themeToDark}
+      title={isDark ? t.common.themeLight : t.common.themeDark}
       className={`theme-toggle inline-flex size-10 items-center justify-center rounded-full border border-border bg-card/60 text-foreground outline-none transition-[background-color,border-color,transform] duration-150 hover:border-primary/50 hover:bg-secondary focus-visible:ring-[3px] focus-visible:ring-ring/50 active:scale-95 ${className}`}
     >
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden>

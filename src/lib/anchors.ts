@@ -15,9 +15,9 @@ export const ANCHORS: Record<string, Anchor> = {
   atletas: { id: 'top', p: 0.6, stacked: 'sec-treinador' },
   nutricao: { id: 'top', p: 0.78, stacked: 'sec-nutricao' },
   progresso: { id: 'top', p: 0.95, stacked: 'sec-progresso' },
-  formatos: { id: 'formatos', p: 0.04, stacked: 'formatos' },
-  modalidades: { id: 'formatos', p: 0.4, stacked: 'sec-modalidades' },
+  modalidades: { id: 'formatos', p: 0, stacked: 'sec-modalidades' },
   ecossistema: { id: 'formatos', p: 0.66, stacked: 'sec-ecossistema' },
+  precos: { id: 'precos', p: 0, stacked: 'precos' },
   comecar: { id: 'comecar', p: 0, stacked: 'comecar' },
 };
 

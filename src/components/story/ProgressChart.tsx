@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { copy } from './copy';
+import { demo } from './copy';
+import { fmt, useT } from '@/i18n';
 
 const W = 700;
 const H = 330;
 const PAD = { l: 52, r: 24, t: 28, b: 44 };
-const data = copy.load;
+const data = demo.load;
 const min = 18;
 const max = 30;
 const x = (i: number) => PAD.l + (i * (W - PAD.l - PAD.r)) / (data.length - 1);
@@ -15,6 +16,8 @@ const area = `${chartPath} L${pts[pts.length - 1].x},${H - PAD.b} L${pts[0].x},$
 
 /** Gráfico interativo (passar o rato / tocar num ponto). Dados de demonstração. 740×430 */
 export function ProgressChart({ className = '' }: { className?: string }) {
+  const t = useT();
+  const c = t.chart;
   const [active, setActive] = useState<number | null>(null);
   const a = active === null ? null : pts[active];
   const best = Math.max(...data);
@@ -23,15 +26,15 @@ export function ProgressChart({ className = '' }: { className?: string }) {
     <div className={`pc relative h-[430px] w-[740px] rounded-2xl border border-border bg-card p-5 text-foreground ${className}`}>
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-[16px] font-bold">Evolução de cargas</p>
-          <p className="text-[12px] text-muted-foreground">{copy.exercise.name} · kg por semana</p>
+          <p className="text-[16px] font-bold">{c.title}</p>
+          <p className="text-[12px] text-muted-foreground">{t.story.exercise.name} · {c.unit}</p>
         </div>
         <span className="rounded-full border border-border px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-          {copy.demoData}
+          {t.common.demoData}
         </span>
       </div>
       <div className="relative mt-2">
-        <svg viewBox={`0 0 ${W} ${H}`} className="block w-full" role="img" aria-label="Gráfico de evolução de cargas (demonstração)">
+        <svg viewBox={`0 0 ${W} ${H}`} className="block w-full" role="img" aria-label={c.aria}>
           <defs>
             <linearGradient id="pc-fill" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0" stopColor="#f97316" stopOpacity="0.32" />
@@ -49,7 +52,7 @@ export function ProgressChart({ className = '' }: { className?: string }) {
             ))}
             {pts.map((p) => (
               <text key={p.i} x={p.x} y={H - 16} textAnchor="middle" fontSize="11" fill="hsl(var(--muted-foreground))">
-                S{p.i + 1}
+                {fmt(c.weekShort, { n: p.i + 1 })}
               </text>
             ))}
           </g>
@@ -91,9 +94,9 @@ export function ProgressChart({ className = '' }: { className?: string }) {
             className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-[130%] whitespace-nowrap rounded-lg border border-border bg-card px-3 py-1.5 text-[12px]"
             style={{ left: `${(a.x / W) * 100}%`, top: `${(a.y / H) * 100}%` }}
           >
-            <span className="font-bold">Semana {a.i + 1}: {a.v} kg</span>
-            {a.v === best && <span className="ml-2 text-primary">Recorde pessoal</span>}
-            <span className="block text-[10px] text-muted-foreground">{copy.demoData}</span>
+            <span className="font-bold">{fmt(c.week, { n: a.i + 1 })}: {a.v} kg</span>
+            {a.v === best && <span className="ml-2 text-primary">{c.personalBest}</span>}
+            <span className="block text-[10px] text-muted-foreground">{t.common.demoData}</span>
           </div>
         )}
       </div>

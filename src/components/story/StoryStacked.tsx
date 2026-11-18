@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { ArrowRight, Dumbbell as DumbbellIcon } from 'lucide-react';
 import { links } from '@/lib/links';
 import { TLink } from '@/lib/nav';
-import { copy } from './copy';
+import { useT } from '@/i18n';
 import { Dumbbell2D } from './Dumbbell2D';
 import { TrainingCard } from './TrainingCard';
 import { Phone } from './Phone';
@@ -41,6 +41,8 @@ function Beat({ id, title, sub, children }: { id: string; title: string; sub: st
 
 /** Versão vertical: ecrãs pequenos e movimento reduzido. Sem secções fixas nem WebGL. */
 export function StoryStacked() {
+  const t = useT();
+  const copy = t.story;
   return (
     <div id="top" className="bg-background text-foreground">
       <section className="relative overflow-hidden px-4 pb-16 pt-20 text-center">
@@ -83,7 +85,7 @@ export function StoryStacked() {
         <Fit w={320} h={320}>
           <NutritionPlate shown />
         </Fit>
-        <p className="mt-3 text-center text-[12px] text-muted-foreground">{copy.demoTag}: valores de uma refeição de exemplo.</p>
+        <p className="mt-3 text-center text-[12px] text-muted-foreground">{t.common.demoTag}: {copy.mealNote}.</p>
       </Beat>
 
       <Beat id="sec-progresso" title={copy.progress.title} sub={copy.progress.sub}>

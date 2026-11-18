@@ -11,7 +11,9 @@ import { links, routes } from '@/lib/links';
 import { cn } from '@/lib/utils';
 import { MegaMenu } from './MegaMenu';
 import { MobileNav } from './MobileNav';
-import { navItems } from './navData';
+import { getNavItems } from './navData';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { useT } from '@/i18n';
 
 /** Que item do menu corresponde ao ponto da página onde o visitante está. */
 function useActiveKey(pathname: string): string | null {
@@ -25,12 +27,16 @@ function useActiveKey(pathname: string): string | null {
       const y = window.scrollY + window.innerHeight * 0.45;
       const at = (k: string) => anchorY(k) ?? Infinity;
       const formatsTop = document.getElementById('formatos')?.getBoundingClientRect().top;
-      const offerTop = document.getElementById('offer')?.getBoundingClientRect().top;
+      const top = (id: string) => {
+        const r = document.getElementById(id)?.getBoundingClientRect().top;
+        return r === undefined ? undefined : r + window.scrollY - window.innerHeight * 0.3;
+      };
+      const precosTop = top('precos');
+      const duoTop = top('treinadores-e-atletas');
       let next: string | null = null;
-      if (offerTop !== undefined && offerTop + window.scrollY <= y) next = null;
+      if (precosTop !== undefined && precosTop <= y) next = 'precos';
+      else if (duoTop !== undefined && duoTop <= y) next = null;
       else if (formatsTop !== undefined && formatsTop + window.scrollY - window.innerHeight * 0.2 <= y) next = 'modalidades';
-      else if (y >= at('atletas')) next = 'atletas';
-      else if (y >= at('treinadores')) next = 'treinadores';
       else if (y >= at('explorar')) next = 'funcionalidades';
       setKey(next);
     };
@@ -81,6 +87,8 @@ function useHeaderScroll(locked: boolean) {
 }
 
 export function SiteHeader() {
+  const t = useT();
+  const navItems = getNavItems(t);
   const { pathname } = useLocation();
   const [megaOpen, setMegaOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -148,7 +156,7 @@ export function SiteHeader() {
       window.removeEventListener('resize', measure);
       window.clearTimeout(t);
     };
-  }, [target, scrolled]);
+  }, [target, scrolled, t]);
 
   const scheduleOpen = () => {
     window.clearTimeout(closeTimer.current);
@@ -193,7 +201,7 @@ export function SiteHeader() {
           }}
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-2 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
         >
-          Saltar para o conteúdo
+          {t.common.skipToContent}
         </a>
         <div
           className={cn(
@@ -203,7 +211,7 @@ export function SiteHeader() {
         >
           <Logo compact={scrolled} />
 
-          <nav aria-label="Principal" className="relative hidden min-[1240px]:block">
+          <nav aria-label={t.common.mainNav} className="relative mx-8 hidden min-w-0 min-[1100px]:block">
             <ul ref={listRef} className="relative flex items-center">
               {navItems.map((item, i) => {
                 const isActive = activeKey === item.key;
@@ -269,26 +277,27 @@ export function SiteHeader() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <LanguageSwitcher className="nav-in hidden sm:block" />
             <ThemeToggle className="nav-in" />
             {links.login && (
-              <ButtonLink href={links.login} variant="ghost" size="sm" className="nav-in hidden min-[1360px]:inline-flex" style={{ ['--i' as string]: 7 }}>
+              <ButtonLink href={links.login} variant="ghost" size="sm" className="nav-in hidden min-[1280px]:inline-flex" style={{ ['--i' as string]: 7 }}>
                 <LogIn className="size-4" aria-hidden />
-                Entrar
+                {t.common.login}
               </ButtonLink>
             )}
-            <ButtonLink href={links.signup} size="sm" className="nav-in hidden px-5 min-[1240px]:inline-flex" style={{ ['--i' as string]: 8 }}>
-              Começar agora
+            <ButtonLink href={links.signup} size="sm" className="nav-in hidden px-5 min-[1100px]:inline-flex" style={{ ['--i' as string]: 8 }}>
+              {t.common.getStarted}
               <ArrowRight className="size-4" aria-hidden />
             </ButtonLink>
 
             <button
               ref={hamburgerRef}
               type="button"
-              aria-label={mobileOpen ? 'Fechar menu' : 'Abrir menu'}
+              aria-label={mobileOpen ? t.common.closeMenu : t.common.openMenu}
               aria-expanded={mobileOpen}
               aria-controls="menu-movel"
               onClick={() => setMobileOpen((v) => !v)}
-              className="relative inline-flex size-11 items-center justify-center rounded-full border border-border bg-card/60 outline-none transition-transform duration-150 focus-visible:ring-[3px] focus-visible:ring-ring/50 active:scale-95 min-[1240px]:hidden"
+              className="relative inline-flex size-11 items-center justify-center rounded-full border border-border bg-card/60 outline-none transition-transform duration-150 focus-visible:ring-[3px] focus-visible:ring-ring/50 active:scale-95 min-[1100px]:hidden"
             >
               <span className="relative block h-3.5 w-5" aria-hidden>
                 <span className={cn('absolute left-0 top-0 h-[2px] w-5 rounded bg-foreground transition-transform duration-300 ease-out', mobileOpen && 'translate-y-[6px] rotate-45')} />

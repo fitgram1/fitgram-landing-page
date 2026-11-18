@@ -20,7 +20,7 @@ export const routes = {
   faq: '/perguntas-frequentes',
   /** Rota antiga da candidatura à beta: hoje só redireciona para a página inicial. */
   legacyWaitlist: '/lista-de-espera',
-  /** Página de preços: ainda não é pública; redireciona para a página inicial. */
+  /** Endereço antigo da página de preços: leva à secção #precos da página inicial. */
   legacyPricing: '/precos',
 } as const;
 

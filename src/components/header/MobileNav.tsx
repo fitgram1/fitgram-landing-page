@@ -7,13 +7,18 @@ import { ButtonLink } from '@/components/ui/button';
 import { TLink, useGo } from '@/lib/nav';
 import { links } from '@/lib/links';
 import { cn } from '@/lib/utils';
-import { megaCategories, navItems } from './navData';
+import { getMegaCategories, getNavItems } from './navData';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { useT } from '@/i18n';
 
 /**
  * Painel de navegação em ecrã inteiro. É irmão do <header> (e não filho) porque o header usa
  * backdrop-filter, que transformaria este `fixed` num elemento posicionado relativamente ao header.
  */
 export function MobileNav({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const t = useT();
+  const navItems = getNavItems(t);
+  const megaCategories = getMegaCategories(t);
   const { pathname } = useLocation();
   const go = useGo();
   const [expanded, setExpanded] = useState<string | null>('funcionalidades');
@@ -68,11 +73,11 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
       id="menu-movel"
       role="dialog"
       aria-modal="true"
-      aria-label="Menu"
+      aria-label={t.common.menu}
       aria-hidden={!open}
       ref={panelRef}
       className={cn(
-        'fixed inset-0 z-[60] flex flex-col bg-background transition-[opacity,transform,visibility] duration-300 ease-out min-[1240px]:hidden',
+        'fixed inset-0 z-[60] flex flex-col bg-background transition-[opacity,transform,visibility] duration-300 ease-out min-[1100px]:hidden',
         open ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-3 opacity-0 [transition-delay:0s,0s,300ms]',
       )}
       style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)' }}
@@ -80,12 +85,13 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
       <div className="flex h-[72px] shrink-0 items-center justify-between px-6">
         <Logo />
         <div className="flex items-center gap-2">
+          <LanguageSwitcher />
           <ThemeToggle />
           <button
             ref={closeRef}
             type="button"
             onClick={onClose}
-            aria-label="Fechar menu"
+            aria-label={t.common.closeMenu}
             className="inline-flex size-11 items-center justify-center rounded-full border border-border bg-card/60 outline-none transition-transform duration-150 focus-visible:ring-[3px] focus-visible:ring-ring/50 active:scale-95"
           >
             <X className="size-5" aria-hidden />
@@ -93,7 +99,7 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
         </div>
       </div>
 
-      <nav aria-label="Principal (móvel)" className="flex-1 overflow-y-auto overscroll-contain px-6 pb-6">
+      <nav aria-label={t.common.mainNavMobile} className="flex-1 overflow-y-auto overscroll-contain px-6 pb-6">
         <ul className="flex flex-col">
           {navItems.map((item) => {
             const current = item.to === pathname;
@@ -174,13 +180,13 @@ export function MobileNav({ open, onClose }: { open: boolean; onClose: () => voi
 
       <div className="shrink-0 border-t border-border bg-background px-6 pb-6 pt-4">
         <ButtonLink href={links.signup} size="lg" className="w-full" onClick={nav(links.signup)}>
-          Começar agora
+          {t.common.getStarted}
           <ArrowRight className="size-5" aria-hidden />
         </ButtonLink>
         {links.login && (
           <ButtonLink href={links.login} size="lg" variant="outline" className="mt-3 w-full">
             <LogIn className="size-4" aria-hidden />
-            Entrar
+            {t.common.login}
           </ButtonLink>
         )}
       </div>

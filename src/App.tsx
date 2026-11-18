@@ -18,8 +18,8 @@ export default function App() {
           <Routes>
             <Route element={<SiteLayout />}>
               <Route index element={<HomePage />} />
-              {/* Preços ainda não são públicos: /precos vai para a página inicial. */}
-              <Route path={routes.legacyPricing} element={<Navigate to={routes.home} replace />} />
+              {/* Os preços vivem numa secção da página inicial: /precos leva até lá. */}
+              <Route path={routes.legacyPricing} element={<Navigate to="/#precos" replace />} />
               <Route path={routes.faq} element={<FaqPage />} />
               {/* A candidatura à beta acabou: links antigos vão para a página inicial. */}
               <Route path={routes.legacyWaitlist} element={<Navigate to={routes.home} replace />} />

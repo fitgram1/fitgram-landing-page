@@ -4,25 +4,22 @@ import { ButtonLink } from '@/components/ui/button';
 import { Reveal } from '@/components/Reveal';
 import { Parallax } from '@/components/Parallax';
 import { appHost, links } from '@/lib/links';
+import { fmt, useT } from '@/i18n';
 
-interface Point {
-  icon: LucideIcon;
-  title: string;
-  body: string;
-}
-
-/** Só factos do produto (sem preços, que ainda não são públicos). */
-const POINTS: Point[] = [
-  { icon: Users, title: 'Para treinadores e atletas', body: 'O treinador cria os planos; o atleta treina, regista as sessões e envia os check-ins.' },
-  { icon: Layers, title: 'Tudo num só sítio', body: 'Treino, nutrição, check-ins e progresso dos teus atletas.' },
-  { icon: MonitorSmartphone, title: 'No computador e no telemóvel', body: `A mesma conta em ${appHost}, em qualquer ecrã.` },
-];
+const POINT_ICONS: LucideIcon[] = [Users, Layers, MonitorSmartphone];
 
 /** Secção final da página inicial: levar a pessoa à app (web e, quando existirem, lojas). */
 export function GetApp() {
+  const t = useT();
+  const g = t.getApp;
+  // «O próximo nível começa contigo.» — a última palavra fica a laranja.
+  const fin = t.chapter2.final.title;
+  const cut = fin.lastIndexOf(' ');
+  const finA = fin.slice(0, cut);
+  const finB = fin.slice(cut + 1);
   const stores = [
-    links.appStore && { href: links.appStore, label: 'Descarregar na App Store', icon: Apple },
-    links.playStore && { href: links.playStore, label: 'Disponível no Google Play', icon: Play },
+    links.appStore && { href: links.appStore, label: g.appStore, icon: Apple },
+    links.playStore && { href: links.playStore, label: g.playStore, icon: Play },
   ].filter((s): s is { href: string; label: string; icon: LucideIcon } => !!s);
 
   return (
@@ -36,24 +33,24 @@ export function GetApp() {
               <View className="lg:pr-6">
                 <Reveal delay={100}>
                   <h2 className="text-[clamp(30px,4.4vw,48px)] font-extrabold leading-[1.05] tracking-tight">
-                    Começa hoje com o <span className="text-primary">FitGram.</span>
+                    {finA} <span className="text-primary">{finB}</span>
                   </h2>
                 </Reveal>
                 <View className="mt-5 h-1 w-12 rounded-full bg-primary" />
                 <Reveal delay={200} from="left">
                   <p className="mt-5 max-w-md text-[17px] leading-relaxed text-muted-foreground">
-                    Cria a tua conta em {appHost} e leva os treinos, a nutrição e o progresso dos teus atletas para uma única plataforma.
+                    {fmt(g.lead, { host: appHost })}
                   </p>
                 </Reveal>
                 <Reveal delay={300} from="left">
                   <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                     <ButtonLink href={links.signup} size="lg" className="cta-shine">
-                      Criar conta
+                      {t.common.signup}
                       <ArrowRight className="size-5" aria-hidden />
                     </ButtonLink>
                     <ButtonLink href={links.login} size="lg" variant="outline">
                       <LogIn className="size-4" aria-hidden />
-                      Entrar
+                      {t.common.login}
                     </ButtonLink>
                   </div>
                 </Reveal>
@@ -72,7 +69,9 @@ export function GetApp() {
               </View>
 
               <View className="lg:pl-6">
-                {POINTS.map(({ icon: Icon, title, body }, i) => (
+                {g.points.map(({ title, body }, i) => {
+                  const Icon = POINT_ICONS[i];
+                  return (
                   <Reveal key={title} delay={i * 110} from="right">
                     <View className={`flex flex-row items-center gap-5 py-5 ${i > 0 ? 'border-t border-border/70' : ''}`}>
                       <View className="grid size-14 shrink-0 place-items-center rounded-full border border-primary/30 bg-primary/10 text-primary">
@@ -80,11 +79,12 @@ export function GetApp() {
                       </View>
                       <View className="min-w-0 flex-1">
                         <h3 className="text-lg font-bold tracking-tight">{title}</h3>
-                        <p className="mt-0.5 text-[15px] leading-relaxed text-muted-foreground">{body}</p>
+                        <p className="mt-0.5 text-[15px] leading-relaxed text-muted-foreground">{fmt(body, { host: appHost })}</p>
                       </View>
                     </View>
                   </Reveal>
-                ))}
+                  );
+                })}
               </View>
             </div>
           </View>

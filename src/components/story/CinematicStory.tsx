@@ -1,9 +1,10 @@
-import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { ArrowRight, Dumbbell as DumbbellIcon } from 'lucide-react';
 import { TLink } from '@/lib/nav';
 import { gsap, ScrollTrigger } from '@/motion/gsap';
 import { links } from '@/lib/links';
-import { copy } from './copy';
+import { demo } from './copy';
+import { useT } from '@/i18n';
 import { HeroLine } from './HeroLine';
 import { Dumbbell2D } from './Dumbbell2D';
 import { initialDumbbell, type DumbbellState } from './dumbbellState';
@@ -54,14 +55,27 @@ const LAYOUT = {
   },
 } as const;
 
-const chips = [
-  { label: 'Exercício', value: copy.exercise.name, x: 330, y: 190, mx: 16, my: 128 },
-  { label: 'Séries', value: '3', x: 720, y: 196, mx: 284, my: 128 },
-  { label: 'Repetições', value: '12', x: 262, y: 330, mx: 16, my: 556 },
-  { label: 'Carga', value: '24 kg', x: 796, y: 334, mx: 270, my: 556 },
-  { label: 'Descanso', value: '90 s', x: 340, y: 470, mx: 16, my: 620 },
-  { label: 'RPE', value: '8', x: 728, y: 472, mx: 300, my: 620 },
-];
+/** Posições dos dados do treino em volta do haltere (desktop x/y, telemóvel mx/my); o texto vem do dicionário. */
+const CHIP_POS = [
+  { x: 330, y: 190, mx: 16, my: 128 },
+  { x: 720, y: 196, mx: 284, my: 128 },
+  { x: 262, y: 330, mx: 16, my: 556 },
+  { x: 796, y: 334, mx: 270, my: 556 },
+  { x: 340, y: 470, mx: 16, my: 620 },
+  { x: 728, y: 472, mx: 300, my: 620 },
+] as const;
+
+/** Etiquetas de macros à volta do prato (desktop): cor e posição local ao prato. */
+const MACRO_CHIPS = [
+  { color: '#38bdf8', x: -96, y: 60 },
+  { color: '#a3e635', x: 340, y: 40 },
+  { color: '#4ade80', x: 350, y: 230 },
+  { color: '#fbbf24', x: -100, y: 250 },
+] as const;
+/** Centro do anel de calorias do telemóvel, em coordenadas do prato (desktop). */
+const RING_TARGET = { x: 900, y: -10 };
+/** Meia largura / meia altura aproximadas de uma etiqueta, para o centro dela acertar no anel. */
+const CHIP_HALF = { w: 70, h: 18 };
 
 const mmss = (s: number) => {
   const v = Math.max(0, Math.round(s));
@@ -86,12 +100,13 @@ function Heading({ cls, title, sub, center = false, mobile = false }: { cls: str
 }
 
 function HeroCta({ mobile = false }: { mobile?: boolean }) {
+  const t = useT();
   return (
     <TLink
       to={links.signup}
       className={`${mobile ? 'w-full justify-center ' : ''}inline-flex h-12 items-center gap-2 rounded-full bg-primary px-7 text-[16px] font-bold text-primary-foreground shadow-lg shadow-primary/30 transition-transform duration-150 hover:scale-[1.03] active:scale-[0.97] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground`}
     >
-      {copy.hero.primary}
+      {t.story.hero.primary}
       <ArrowRight className="size-5" aria-hidden />
     </TLink>
   );
@@ -100,9 +115,38 @@ function HeroCta({ mobile = false }: { mobile?: boolean }) {
 /** Versão fixa (desktop e telemóvel): uma única linha temporal GSAP controlada pelo scroll. */
 export function CinematicStory({ webgl, mobile = false }: { webgl: boolean; mobile?: boolean }) {
   const P = LAYOUT[mobile ? 'mobile' : 'desktop'];
+  const t = useT();
+  const S = t.story;
+  const chips = [
+    { label: S.stats.exercise, value: S.exercise.name },
+    { label: S.stats.sets, value: '3' },
+    { label: S.stats.reps, value: '12' },
+    { label: S.stats.load, value: '24 kg' },
+    { label: S.stats.rest, value: '90 s' },
+    { label: S.stats.rpe, value: '8' },
+  ].map((c, i) => ({ ...c, ...CHIP_POS[i] }));
+  // «Treina melhor. Evolui sempre.» → a segunda frase recebe o brilho.
+  const cut = S.hero.headline.indexOf('. ');
+  const headA = cut > 0 ? S.hero.headline.slice(0, cut + 1) : S.hero.headline;
+  const headB = cut > 0 ? S.hero.headline.slice(cut + 2) : '';
+  const onPointer = (e: ReactPointerEvent<HTMLElement>) => {
+    if (e.pointerType === 'touch') return;
+    const el = root.current;
+    if (!el) return;
+    el.style.setProperty('--px', ((e.clientX / window.innerWidth) * 2 - 1).toFixed(3));
+    el.style.setProperty('--py', ((e.clientY / window.innerHeight) * 2 - 1).toFixed(3));
+  };
+  const mc = S.macroChips;
+  const macroChips = [
+    { label: mc.protein, value: `${demo.macros.p} g` },
+    { label: mc.carbs, value: `${demo.macros.c} g` },
+    { label: mc.veg, value: mc.fiber },
+    { label: mc.fat, value: `${demo.macros.f} g` },
+  ].map((c, i) => ({ ...c, ...MACRO_CHIPS[i] }));
   const { w: DESIGN_W, h: DESIGN_H } = SIZE[mobile ? 'mobile' : 'desktop'];
   const root = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
+  const heroBg = useRef<HTMLDivElement>(null);
   const scaleRef = useRef(1);
   const dumbbell = useRef<DumbbellState>(initialDumbbell());
   const [live, setLive] = useState(false);
@@ -157,7 +201,12 @@ export function CinematicStory({ webgl, mobile = false }: { webgl: boolean; mobi
       gsap.set(['.scr-live', '.scr-nutri', '.ws-rest', '.ws-pulse', '.live-left', '.plate-wrap', '.chart-wrap', '.pulse-global'], {
         autoAlpha: 0,
       });
-      gsap.set('.ing', { autoAlpha: 0, y: -90, scale: 0.6, transformOrigin: '50% 50%' });
+      gsap.set('.ing', { autoAlpha: 0, y: -120, scale: 0.5, rotation: -30, transformOrigin: '50% 50%' });
+      gsap.set('.np-burst', { autoAlpha: 0, scale: 0.4, transformOrigin: '50% 50%' });
+      gsap.set('.np-steam-g', { autoAlpha: 0 });
+      gsap.set('.np-glow', { autoAlpha: 0 });
+      gsap.set('.np-disc', { scale: 0.7, rotation: -40, transformOrigin: '50% 50%' });
+      gsap.set('.mchip', { autoAlpha: 0, scale: 0.4, x: 0, y: 0 });
       gsap.set('.pc-point', { scale: 0, autoAlpha: 0 });
       gsap.set('.pc-area', { autoAlpha: 0 });
       gsap.set('.pc-line', { strokeDashoffset: 1 });
@@ -180,13 +229,15 @@ export function CinematicStory({ webgl, mobile = false }: { webgl: boolean; mobi
 
       // A. Do pulso ao movimento (0.00 – 0.18)
       T('.hero-block', { autoAlpha: 0, y: -40 }, 0, 0.05);
-      T('.hchip, .hcard', { autoAlpha: 0, y: -20 }, 0, 0.04);
+      if (heroBg.current) tl.fromTo(heroBg.current, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.06, immediateRender: false }, 0);
+      // fromTo: ao voltar ao topo, os dados e o haltere regressam (antes ficavam escondidos).
+      tl.fromTo('.hchip, .hcard', { autoAlpha: 1, y: 0 }, { autoAlpha: 0, y: -20, duration: 0.04, immediateRender: false }, 0);
       T(dumbbell.current, { idle: 0 }, 0, 0.03);
       T('.hl', { opacity: 0.12 }, 0, 0.06);
-      T('.db', { autoAlpha: 1, ...P.dbMain }, 0.0, 0.07);
+      tl.fromTo('.db', { autoAlpha: 1, ...P.dbHero }, { autoAlpha: 1, ...P.dbMain, duration: 0.07, immediateRender: false }, 0);
       T('.hd-1', { autoAlpha: 1, y: 0 }, 0.05, 0.04);
       T(dumbbell.current, { rotY: Math.PI * 1.4, rotX: 0.12, rotZ: 0.05, trail: 1 }, 0.02, 0.16);
-      chips.forEach((_, i) => T(`.chip-${i}`, { autoAlpha: 1, scale: 1 }, 0.1 + i * 0.012, 0.03));
+      CHIP_POS.forEach((_, i) => T(`.chip-${i}`, { autoAlpha: 1, scale: 1 }, 0.1 + i * 0.012, 0.03));
 
       // B. Do movimento ao cartão de treino (0.18 – 0.30)
       T('.hd-1', { autoAlpha: 0, y: -12 }, 0.18, 0.025);
@@ -270,9 +321,25 @@ export function CinematicStory({ webgl, mobile = false }: { webgl: boolean; mobi
       T('.scr-live', { autoAlpha: 0 }, 0.715, 0.02);
       T('.scr-nutri', { autoAlpha: 1 }, 0.715, 0.02);
       T('.plate-wrap', { autoAlpha: 1 }, 0.71, 0.03);
+      tl.to('.np-disc', { scale: 1, rotation: 0, ease: 'power3.out', duration: 0.035 }, 0.705);
+      T('.np-glow', { autoAlpha: 1 }, 0.72, 0.03);
       [1, 2, 3, 4].forEach((n, i) => {
-        tl.to(`.ing-${n}`, { autoAlpha: 1, y: 0, scale: 1, ease: 'power2.out', duration: 0.03 }, 0.735 + i * 0.016);
+        const at = 0.735 + i * 0.014;
+        tl.to(`.ing-${n}`, { autoAlpha: 1, y: 0, scale: 1, rotation: 0, ease: 'back.out(2.2)', duration: 0.03 }, at);
+        // faíscas no momento do impacto
+        tl.fromTo(`.np-burst-${n}`, { autoAlpha: 1, scale: 0.4 }, { autoAlpha: 0, scale: 1.5, ease: 'power2.out', duration: 0.018, immediateRender: false }, at + 0.022);
+        // a etiqueta de macros salta do alimento
+        tl.to(`.mchip-${n}`, { autoAlpha: 1, scale: 1, ease: 'back.out(2)', duration: 0.02 }, at + 0.024);
       });
+      T('.np-steam-g', { autoAlpha: 1 }, 0.79, 0.02);
+      // as etiquetas voam para o anel de calorias do telemóvel
+      if (!mobile) {
+        MACRO_CHIPS.forEach((c, i) => {
+          tl.to(`.mchip-${i + 1}`, { x: RING_TARGET.x - c.x - CHIP_HALF.w, y: RING_TARGET.y - c.y - CHIP_HALF.h, scale: 0.25, autoAlpha: 0, ease: 'power2.in', duration: 0.03 }, 0.795 + i * 0.006);
+        });
+        tl.fromTo('.nu-ring-glow', { autoAlpha: 0, scale: 0.8 }, { autoAlpha: 1, scale: 1.15, duration: 0.012, immediateRender: false }, 0.815);
+        tl.to('.nu-ring-glow', { autoAlpha: 0, scale: 1.3, duration: 0.012 }, 0.827);
+      }
       const nu = { q: 0 };
       const ring = one('.nu-ring') as unknown as SVGCircleElement;
       const C = Number(ring?.getAttribute('data-c') ?? 327);
@@ -280,7 +347,7 @@ export function CinematicStory({ webgl, mobile = false }: { webgl: boolean; mobi
         q: 1,
         duration: 0.08,
         onUpdate: () => {
-          const m = copy.macros;
+          const m = demo.macros;
           setTxt('.nu-kcal', String(Math.round(m.kcal * nu.q)));
           setTxt('.nu-p', String(Math.round(m.p * nu.q)));
           setTxt('.nu-c', String(Math.round(m.c * nu.q)));
@@ -316,7 +383,7 @@ export function CinematicStory({ webgl, mobile = false }: { webgl: boolean; mobi
       const line = one('.pc-line') as unknown as SVGPathElement;
       const len = line.getTotalLength();
       const traveler = one('.pc-traveler');
-      const n = copy.load.length;
+      const n = demo.load.length;
       const pr = { p: 0 };
       tl.to(pr, {
         p: 1,
@@ -352,8 +419,14 @@ export function CinematicStory({ webgl, mobile = false }: { webgl: boolean; mobi
   }, [P, mobile]);
 
   return (
-    <section ref={root} id="top" aria-label="FitGram — cada repetição conta uma história" className="relative bg-background" style={{ height: mobile ? '760svh' : '820vh' }}>
+    <section ref={root} id="top" aria-label={S.aria} onPointerMove={onPointer} className="relative bg-background" style={{ height: mobile ? '760svh' : '820vh' }}>
       <div className={`sticky-view sticky top-16 w-full overflow-hidden ${mobile ? 'h-[calc(100svh-4rem)]' : 'h-[calc(100vh-4rem)]'}`}>
+        {/* Fundo do hero: grelha de pontos, brilhos suaves e vinheta (ecrã inteiro, atrás do palco). */}
+        <div ref={heroBg} className="pointer-events-none absolute inset-0" aria-hidden>
+          <div className={`hero-grid absolute inset-0 ${mobile ? 'hero-grid-m' : ''}`} />
+          <div className="absolute inset-0 bg-[radial-gradient(55%_60%_at_74%_46%,rgba(249,115,22,0.13),transparent_70%),radial-gradient(40%_45%_at_8%_95%,rgba(251,146,60,0.07),transparent_70%)]" />
+          <div className="absolute inset-0 hidden bg-[radial-gradient(120%_90%_at_50%_40%,transparent_55%,rgba(0,0,0,0.55)_100%)] dark:block" />
+        </div>
         <div
           ref={stage}
           className="absolute left-1/2 top-1/2 text-foreground"
@@ -363,6 +436,18 @@ export function CinematicStory({ webgl, mobile = false }: { webgl: boolean; mobi
 
           {/* Hero */}
           <div className="hero-block absolute inset-0">
+            {/* aurora e faíscas atrás do haltere */}
+            <div className={`pointer-events-none absolute ${mobile ? 'left-[-60px] top-[250px] size-[520px]' : 'left-[640px] top-[40px] size-[720px]'}`} aria-hidden>
+              <div className="hero-aurora hero-aurora-1 absolute inset-[10%] rounded-full" />
+              <div className="hero-aurora hero-aurora-2 absolute inset-[22%] rounded-full" />
+              {Array.from({ length: 16 }, (_, i) => (
+                <span
+                  key={i}
+                  className="hero-spark absolute bottom-[18%] size-1.5 rounded-full bg-primary"
+                  style={{ left: `${12 + ((i * 53) % 76)}%`, animationDelay: `${-(i * 0.45)}s`, animationDuration: `${3.2 + (i % 5) * 0.6}s` }}
+                />
+              ))}
+            </div>
             <div
               className={`hero-intro absolute text-left [text-shadow:0_2px_24px_hsl(var(--background)/0.9)] ${
                 mobile ? 'left-[22px] top-[10px] w-[356px]' : 'left-[80px] top-[170px] w-[600px]'
@@ -370,10 +455,18 @@ export function CinematicStory({ webgl, mobile = false }: { webgl: boolean; mobi
             >
               <p className={`inline-flex items-center gap-2 font-bold uppercase text-primary ${mobile ? 'text-[11px] tracking-[0.16em]' : 'text-[13px] tracking-[0.2em]'}`}>
                 <span className="h-px w-8 bg-primary" aria-hidden />
-                {copy.hero.eyebrow}
+                {S.hero.eyebrow}
               </p>
-              <h1 className={`font-extrabold tracking-tight ${mobile ? 'mt-3 text-[40px] leading-[1.04]' : 'mt-5 text-[66px] leading-[1.02]'}`}>{copy.hero.headline}</h1>
-              <p className={`leading-relaxed text-foreground/80 ${mobile ? 'mt-3 text-[15px]' : 'mt-5 max-w-[520px] text-[19px]'}`}>{copy.hero.sub}</p>
+              <h1 className={`font-extrabold tracking-tight ${mobile ? 'mt-3 text-[40px] leading-[1.04]' : 'mt-5 text-[66px] leading-[1.02]'}`}>
+                {headA}
+                {headB && (
+                  <>
+                    {' '}
+                    <span className="hero-shine">{headB}</span>
+                  </>
+                )}
+              </h1>
+              <p className={`leading-relaxed text-foreground/80 ${mobile ? 'mt-3 text-[15px]' : 'mt-5 max-w-[520px] text-[19px]'}`}>{S.hero.sub}</p>
               <div className={`flex gap-3 [text-shadow:none] ${mobile ? 'mt-5 flex-col' : 'mt-8'}`}>
                 <HeroCta mobile={mobile} />
                 <TLink
@@ -381,22 +474,23 @@ export function CinematicStory({ webgl, mobile = false }: { webgl: boolean; mobi
                   className={`${mobile ? 'w-full justify-center ' : ''}inline-flex h-12 items-center gap-2 rounded-full border border-foreground/25 bg-background/40 px-7 text-[16px] font-semibold text-foreground backdrop-blur transition-[background-color,transform] duration-150 hover:bg-foreground/10 active:scale-[0.97] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground`}
                 >
                   <DumbbellIcon className="size-5" aria-hidden />
-                  {copy.hero.secondary}
+                  {S.hero.secondary}
                 </TLink>
               </div>
             </div>
 
+            <div className="hero-par absolute inset-0">
             {/* Dados de treino em volta do haltere (valores de exemplo) */}
             {(mobile
               ? [
-                  { l: 'Carga', v: '24 kg', x: 22, y: 568 },
-                  { l: 'Séries × repetições', v: '3 × 12', x: 120, y: 568 },
-                  { l: 'RPE', v: '8', x: 300, y: 568 },
+                  { l: S.stats.load, v: '24 kg', x: 22, y: 568 },
+                  { l: S.stats.setsReps, v: '3 × 12', x: 120, y: 568 },
+                  { l: S.stats.rpe, v: '8', x: 300, y: 568 },
                 ]
               : [
-                  { l: 'Carga', v: '24 kg', x: 760, y: 150 },
-                  { l: 'Séries × repetições', v: '3 × 12', x: 1010, y: 214 },
-                  { l: 'RPE', v: '8', x: 1068, y: 392 },
+                  { l: S.stats.load, v: '24 kg', x: 760, y: 150 },
+                  { l: S.stats.setsReps, v: '3 × 12', x: 1010, y: 214 },
+                  { l: S.stats.rpe, v: '8', x: 1068, y: 392 },
                 ]
             ).map((c) => (
               <div key={c.l} className="hchip absolute rounded-xl border border-border bg-card/90 px-3.5 py-2 shadow-card backdrop-blur md:px-4 md:py-2.5" style={{ left: c.x, top: c.y }}>
@@ -410,20 +504,21 @@ export function CinematicStory({ webgl, mobile = false }: { webgl: boolean; mobi
               }`}
             >
               <div className="flex items-center justify-between">
-                <p className="text-[13px] font-semibold">Evolução da carga</p>
-                <span className="rounded-full border border-border px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">{copy.demoTag}</span>
+                <p className="text-[13px] font-semibold">{S.loadEvolution}</p>
+                <span className="rounded-full border border-border px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">{t.common.demoTag}</span>
               </div>
               <svg viewBox="0 0 380 70" preserveAspectRatio="none" className={`mt-2 w-full ${mobile ? 'h-[44px]' : 'h-[70px]'}`} aria-hidden>
                 <path className="hc-line" pathLength={1} strokeDasharray={1} d="M4,58 L60,54 L120,48 L170,50 L230,36 L290,28 L340,16 L376,8" fill="none" stroke="hsl(var(--primary))" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
               </svg>
             </div>
+            </div>
           </div>
 
-          <Heading cls="hd-1" title={copy.movement.title} sub={copy.movement.sub} center mobile={mobile} />
-          <Heading cls="hd-2" title={copy.coach.title} sub={copy.coach.sub} mobile={mobile} />
-          <Heading cls="hd-3" title={copy.live.title} sub={copy.live.sub} mobile={mobile} />
-          <Heading cls="hd-4" title={copy.nutrition.title} sub={copy.nutrition.sub} mobile={mobile} />
-          <Heading cls="hd-5" title={copy.progress.title} sub={copy.progress.sub} mobile={mobile} />
+          <Heading cls="hd-1" title={S.movement.title} sub={S.movement.sub} center mobile={mobile} />
+          <Heading cls="hd-2" title={S.coach.title} sub={S.coach.sub} mobile={mobile} />
+          <Heading cls="hd-3" title={S.live.title} sub={S.live.sub} mobile={mobile} />
+          <Heading cls="hd-4" title={S.nutrition.title} sub={S.nutrition.sub} mobile={mobile} />
+          <Heading cls="hd-5" title={S.progress.title} sub={S.progress.sub} mobile={mobile} />
 
           {/* Janela do treinador + cartão */}
           <div className={`tw-wrap absolute ${mobile ? 'left-[-120px] top-[112px]' : 'left-[90px] top-[170px]'}`}>
@@ -447,7 +542,7 @@ export function CinematicStory({ webgl, mobile = false }: { webgl: boolean; mobi
           </div>
           {chips.map((c, i) => (
             <div
-              key={c.label}
+              key={i}
               className={`chip chip-${i} absolute rounded-xl border border-border bg-card/80 px-3.5 py-2 backdrop-blur md:px-4 md:py-2.5`}
               style={{ left: mobile ? c.mx : c.x, top: mobile ? c.my : c.y }}
             >
@@ -463,37 +558,55 @@ export function CinematicStory({ webgl, mobile = false }: { webgl: boolean; mobi
 
           {/* Leituras grandes à esquerda durante o treino */}
           <div className={`live-left absolute left-[80px] top-[200px] w-[480px] ${mobile ? 'hidden' : ''}`}>
-            <p className="text-[12px] uppercase tracking-widest text-muted-foreground">Tempo de treino</p>
+            <p className="text-[12px] uppercase tracking-widest text-muted-foreground">{S.workoutTime}</p>
             <p className="ll-timer text-[96px] font-extrabold leading-none tabular-nums">00:00</p>
             <div className="mt-8 flex gap-10">
               <div>
-                <p className="text-[12px] uppercase tracking-widest text-muted-foreground">Repetições</p>
+                <p className="text-[12px] uppercase tracking-widest text-muted-foreground">{S.stats.reps}</p>
                 <p className="text-[56px] font-extrabold leading-none tabular-nums">
                   <span className="ll-reps">0</span>
                   <span className="text-[24px] text-muted-foreground"> / 12</span>
                 </p>
               </div>
               <div>
-                <p className="text-[12px] uppercase tracking-widest text-muted-foreground">Descanso</p>
+                <p className="text-[12px] uppercase tracking-widest text-muted-foreground">{S.stats.rest}</p>
                 <p className="ll-rest text-[56px] font-extrabold leading-none tabular-nums">01:30</p>
               </div>
             </div>
-            <p className="mt-8 text-[12px] text-muted-foreground">{copy.demoTag} — não são dados reais.</p>
+            <p className="mt-8 text-[12px] text-muted-foreground">{t.common.demoTag} — {t.common.notRealData}.</p>
           </div>
 
           {mobile ? (
             <div className="plate-wrap absolute left-[94px] top-[124px] w-[212px]">
               <div className="h-[212px] w-[212px]">
-                <div className="origin-top-left scale-[0.66]">
-                  <NutritionPlate />
+                <div className="relative origin-top-left scale-[0.66]">
+                  <div className="np-glow pointer-events-none absolute left-1/2 top-[165px] size-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(249,115,22,0.35),transparent_65%)] blur-xl" aria-hidden />
+                  <div className="np-disc relative">
+                    <NutritionPlate />
+                  </div>
                 </div>
               </div>
-              <p className="mt-1 text-center text-[11px] text-muted-foreground">{copy.demoTag}</p>
+              <p className="mt-1 text-center text-[11px] text-muted-foreground">{t.common.demoTag}</p>
             </div>
           ) : (
             <div className="plate-wrap absolute left-[150px] top-[260px]">
-              <NutritionPlate />
-              <p className="mt-3 text-[12px] text-muted-foreground">{copy.demoTag}: valores de uma refeição de exemplo.</p>
+              <div className="np-glow pointer-events-none absolute left-1/2 top-[165px] size-[460px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(249,115,22,0.35),rgba(249,115,22,0.08)_45%,transparent_70%)] blur-xl" aria-hidden />
+              <div className="np-disc relative">
+                <NutritionPlate />
+              </div>
+              {macroChips.map((c, i) => (
+                <div
+                  key={i}
+                  className={`mchip mchip-${i + 1} absolute flex items-center whitespace-nowrap gap-2.5 rounded-full border border-border bg-card/90 py-2 pl-2 pr-4 shadow-2xl backdrop-blur`}
+                  style={{ left: c.x, top: c.y }}
+                  aria-hidden
+                >
+                  <span className="size-3 rounded-full" style={{ background: c.color, boxShadow: `0 0 12px ${c.color}` }} />
+                  <span className="text-[12px] text-muted-foreground">{c.label}</span>
+                  <span className="text-[15px] font-extrabold tabular-nums">{c.value}</span>
+                </div>
+              ))}
+              <p className="relative mt-3 text-[12px] text-muted-foreground">{t.common.demoTag}: {S.mealNote}.</p>
             </div>
           )}
 

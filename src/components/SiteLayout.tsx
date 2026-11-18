@@ -6,10 +6,17 @@ import { ANCHORS, scrollToAnchor } from '@/lib/anchors';
 
 const positions = new Map<string, number>();
 
+/** true quando a página foi recarregada (F5 / ⌘R): nesse caso começa sempre no hero. */
+const isReload = (() => {
+  const nav = performance.getEntriesByType('navigation')[0];
+  return nav instanceof PerformanceNavigationTiming && nav.type === 'reload';
+})();
+
 /**
  * Posição de scroll coerente com o histórico:
  *  - voltar/avançar → repõe a posição guardada;
  *  - ligação com #âncora → vai à cena/secção certa;
+ *  - recarregar a página → topo (o hero), mesmo com #âncora no endereço;
  *  - restantes navegações → topo.
  */
 function ScrollManager() {
@@ -17,6 +24,7 @@ function ScrollManager() {
   const type = useNavigationType();
   const keyRef = useRef(loc.key);
   keyRef.current = loc.key;
+  const firstRun = useRef(true);
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual';
@@ -33,7 +41,15 @@ function ScrollManager() {
   }, []);
 
   useLayoutEffect(() => {
-    const hash = loc.hash.slice(1);
+    let hash = loc.hash.slice(1);
+    if (firstRun.current) {
+      firstRun.current = false;
+      if (isReload && hash) {
+        // tira a âncora do endereço para o próximo refresh também abrir no topo
+        window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search);
+        hash = '';
+      }
+    }
     let tries = 0;
     let raf = 0;
     const apply = () => {

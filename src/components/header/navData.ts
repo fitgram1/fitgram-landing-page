@@ -3,6 +3,7 @@ import {
   Users, MessageCircle, Calendar, Timer, type LucideIcon,
 } from 'lucide-react';
 import { routes } from '@/lib/links';
+import type { Messages } from '@/i18n/translations';
 
 export interface MegaItem {
   label: string;
@@ -21,49 +22,29 @@ export interface MegaCategory {
  * Só aparecem funcionalidades que o produto tem (ver secção «Por dentro» e a história).
  * Cada destino é uma cena real da página inicial ou uma página pública existente.
  */
-export const megaCategories: MegaCategory[] = [
-  {
-    key: 'treino',
-    title: 'Treino',
-    blurb: 'Do plano ao registo de cada série: o treino ganha forma e o histórico fica guardado.',
-    items: [
-      { label: 'Planos de treino', hint: 'Séries, repetições e progressões', to: '/#treinadores', icon: ClipboardList },
-      { label: 'Formatos e modalidades', hint: 'Força, corrida, AMRAP, EMOM, HYROX', to: '/#modalidades', icon: Layers },
-      { label: 'Registo de sessões', hint: 'Cargas anteriores à vista', to: '/#atletas', icon: Timer },
-      { label: 'Histórico e evolução', hint: 'Cargas e recordes num gráfico', to: '/#progresso', icon: TrendingUp },
-    ],
-  },
-  {
-    key: 'nutricao',
-    title: 'Nutrição',
-    blurb: 'Plano alimentar, refeições, receitas e macros no mesmo sítio.',
-    items: [
-      { label: 'Planos alimentares', hint: 'Macros e porções', to: '/#nutricao', icon: Utensils },
-      { label: 'Refeições e macros', hint: 'Calorias, proteína, hidratos, gordura', to: '/#nutricao', icon: Scale },
-      { label: 'Receitas', hint: 'Junto do plano', to: '/#nutricao', icon: ChefHat },
-    ],
-  },
-  {
-    key: 'acompanhamento',
-    title: 'Acompanhamento',
-    blurb: 'Os atletas enviam formulários, fotografias e métricas; tudo cai no perfil.',
-    items: [
-      { label: 'Formulários de check-in', hint: 'Enviados pelos atletas', to: '/#progresso', icon: FileText },
-      { label: 'Fotografias de progresso', hint: 'No perfil do atleta', to: '/#progresso', icon: Camera },
-      { label: 'Métricas corporais', hint: 'Evolução ao longo do tempo', to: '/#progresso', icon: Ruler },
-    ],
-  },
-  {
-    key: 'gestao',
-    title: 'Gestão',
-    blurb: 'Para treinadores: clientes, conversas e planos num único sistema.',
-    items: [
-      { label: 'Atletas e planos', hint: 'Contexto, objetivos e histórico', to: '/#treinadores', icon: Users },
-      { label: 'Conversas', hint: 'Tudo num só lugar', to: '/#treinadores', icon: MessageCircle },
-      { label: 'Agenda', hint: 'Sessões e compromissos', to: '/#treinadores', icon: Calendar },
-    ],
-  },
+/** Ícones e destinos (fixos); os textos vêm do dicionário da língua ativa, pela mesma ordem. */
+const MEGA: { key: string; items: { to: string; icon: LucideIcon }[] }[] = [
+  { key: 'treino', items: [
+    { to: '/#treinadores', icon: ClipboardList }, { to: '/#modalidades', icon: Layers }, { to: '/#atletas', icon: Timer }, { to: '/#progresso', icon: TrendingUp } ] },
+  { key: 'nutricao', items: [
+    { to: '/#nutricao', icon: Utensils }, { to: '/#nutricao', icon: Scale }, { to: '/#nutricao', icon: ChefHat } ] },
+  { key: 'acompanhamento', items: [
+    { to: '/#progresso', icon: FileText }, { to: '/#progresso', icon: Camera }, { to: '/#progresso', icon: Ruler } ] },
+  { key: 'gestao', items: [
+    { to: '/#treinadores', icon: Users }, { to: '/#treinadores', icon: MessageCircle }, { to: '/#treinadores', icon: Calendar } ] },
 ];
+
+export function getMegaCategories(t: Messages): MegaCategory[] {
+  return MEGA.map((c, i) => {
+    const tc = t.nav.categories[i];
+    return {
+      key: c.key,
+      title: tc.title,
+      blurb: tc.blurb,
+      items: c.items.map((it, j) => ({ ...it, label: tc.items[j].label, hint: tc.items[j].hint })),
+    };
+  });
+}
 
 export interface NavItem {
   key: string;
@@ -73,10 +54,11 @@ export interface NavItem {
   icon?: LucideIcon;
 }
 
-export const navItems: NavItem[] = [
-  { key: 'funcionalidades', label: 'Funcionalidades', mega: true, icon: Dumbbell },
-  { key: 'treinadores', label: 'Para treinadores', to: '/#treinadores' },
-  { key: 'atletas', label: 'Para atletas', to: '/#atletas' },
-  { key: 'modalidades', label: 'Modalidades', to: '/#modalidades' },
-  { key: 'faq', label: 'Perguntas frequentes', to: routes.faq },
-];
+export function getNavItems(t: Messages): NavItem[] {
+  return [
+    { key: 'funcionalidades', label: t.nav.features, mega: true, icon: Dumbbell },
+    { key: 'modalidades', label: t.nav.sports, to: '/#modalidades' },
+    { key: 'precos', label: t.nav.pricing, to: '/#precos' },
+    { key: 'faq', label: t.nav.faq, to: routes.faq },
+  ];
+}

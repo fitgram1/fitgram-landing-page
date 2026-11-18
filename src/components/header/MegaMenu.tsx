@@ -2,13 +2,16 @@ import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { TLink } from '@/lib/nav';
 import { cn } from '@/lib/utils';
-import { megaCategories } from './navData';
+import { getMegaCategories } from './navData';
+import { useT } from '@/i18n';
 
 /**
  * Painel de «Funcionalidades». Fica sempre no DOM (para animar), mas invisível e fora da ordem de tabulação quando fechado.
  * Passar o rato entre categorias não o fecha: o fecho é adiado pelo cabeçalho (180 ms) e cancelado ao regressar.
  */
 export function MegaMenu({ open, onNavigate }: { open: boolean; onNavigate: () => void }) {
+  const t = useT();
+  const megaCategories = getMegaCategories(t);
   const [cat, setCat] = useState(megaCategories[0].key);
   const active = megaCategories.find((c) => c.key === cat) ?? megaCategories[0];
 
@@ -23,7 +26,7 @@ export function MegaMenu({ open, onNavigate }: { open: boolean; onNavigate: () =
       )}
     >
       <div className="mx-auto grid w-full max-w-[1120px] gap-8 px-6 py-8 lg:grid-cols-[220px_minmax(0,1fr)_300px]">
-        <div role="tablist" aria-label="Categorias" aria-orientation="vertical" className="flex flex-col gap-1">
+        <div role="tablist" aria-label={t.common.categories} aria-orientation="vertical" className="flex flex-col gap-1">
           {megaCategories.map((c, i) => {
             const on = c.key === active.key;
             return (
@@ -89,7 +92,7 @@ export function MegaMenu({ open, onNavigate }: { open: boolean; onNavigate: () =
               onClick={onNavigate}
               className="mt-5 inline-flex items-center gap-2 rounded-lg text-sm font-semibold text-foreground outline-none hover:text-primary focus-visible:ring-[3px] focus-visible:ring-ring/50"
             >
-              Ver na demonstração
+              {t.nav.seeDemo}
               <ArrowRight className="size-4" aria-hidden />
             </TLink>
           </div>

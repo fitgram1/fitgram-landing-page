@@ -1,9 +1,18 @@
-import { copy } from './copy';
+import { useT } from '@/i18n';
 import { Dumbbell2D } from './Dumbbell2D';
 
 /** Cartão de treino (420×230 no espaço de design). Reutilizado no ecrã do treinador e no telemóvel. */
 export function TrainingCard({ className = '', showIcon = false }: { className?: string; showIcon?: boolean }) {
-  const { exercise, demoTag } = copy;
+  const t = useT();
+  const { exercise, stats: st } = t.story;
+  const demoTag = t.common.demoTag;
+  const stats = [
+    { label: st.sets, value: '3' },
+    { label: st.reps, value: '12' },
+    { label: st.load, value: '24 kg' },
+    { label: st.rest, value: '90 s' },
+    { label: st.rpe, value: '8' },
+  ];
   return (
     <div
       className={`tc h-[230px] w-[420px] relative rounded-2xl border border-border bg-card p-5 text-foreground shadow-2xl ${className}`}
@@ -21,7 +30,7 @@ export function TrainingCard({ className = '', showIcon = false }: { className?:
         {demoTag}
       </span>
       <div className="tc-stats mt-6 grid grid-cols-5 gap-2">
-        {exercise.stats.map((s) => (
+        {stats.map((s) => (
           <div key={s.label} className="tc-stat rounded-xl bg-foreground/[0.04] px-2 py-3 text-center">
             <p className="whitespace-nowrap text-[20px] font-extrabold leading-none text-foreground">{s.value}</p>
             <p className="mt-1.5 text-[10px] uppercase tracking-wide text-muted-foreground">{s.label}</p>
